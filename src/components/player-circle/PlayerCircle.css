@@ -9,7 +9,7 @@
 
 .player-circle__stage {
   position: relative;
-  width: min(100%, calc(100dvh - var(--toolbar-h) - 12rem));
+  width: min(100%, calc(100svh - var(--toolbar-h) - 12rem));
   aspect-ratio: 1;
   max-height: 100%;
 }

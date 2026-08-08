@@ -18,15 +18,11 @@ export const PlayerSheet = ({
   onRemove,
 }: IPlayerSheetProps) => {
   const nameInputRef = useRef<HTMLInputElement>(null)
-  const prevIdRef = useRef<string | null>(null)
 
   useEffect(() => {
-    if (prevIdRef.current !== player.id) {
-      prevIdRef.current = player.id
-      nameInputRef.current?.focus()
-      nameInputRef.current?.select()
-    }
-  }, [player.id])
+    // Focus only when the sheet mounts — not on every new player while open
+    nameInputRef.current?.focus({ preventScroll: true })
+  }, [])
 
   const handleRemove = () => {
     const confirmed = window.confirm(
@@ -56,6 +52,7 @@ export const PlayerSheet = ({
             onChange={(event) => onNameChange(player.id, event.target.value)}
             placeholder="Имя игрока"
             autoComplete="off"
+            enterKeyHint="done"
           />
         </div>
         <div className="field">

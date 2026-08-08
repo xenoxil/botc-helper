@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import type { IPlayer } from '../../types/game'
 import { getPlayerInitials } from '../../lib/circleLayout'
 import './PlayerSeat.css'
@@ -17,14 +18,22 @@ export const PlayerSeat = ({
   isSelected,
   onSelect,
 }: IPlayerSeatProps) => {
+  const [isEntering, setIsEntering] = useState(true)
   const hasNotes = player.notes.trim().length > 0
   const className = [
     'player-seat',
+    isEntering ? 'player-seat--enter' : '',
     isSelected ? 'player-seat--selected' : '',
     hasNotes ? 'player-seat--has-notes' : '',
   ]
     .filter(Boolean)
     .join(' ')
+
+  useEffect(() => {
+    if (!isEntering) return
+    const timer = window.setTimeout(() => setIsEntering(false), 280)
+    return () => window.clearTimeout(timer)
+  }, [isEntering])
 
   return (
     <button

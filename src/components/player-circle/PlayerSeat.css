@@ -6,8 +6,15 @@
   gap: 0.25rem;
   width: 64px;
   transform: translate(-50%, -50%);
-  animation: seat-in 280ms ease both;
+  /* Smooth redistribution when a seat is added/removed */
+  transition: left 280ms ease, top 280ms ease;
   z-index: 1;
+}
+
+.player-seat--enter {
+  /* Appear in place; don't tween from (0,0) on first paint */
+  transition: none;
+  animation: seat-in 280ms ease both;
 }
 
 .player-seat__avatar {

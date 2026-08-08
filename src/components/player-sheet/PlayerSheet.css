@@ -4,7 +4,7 @@
   right: 0;
   bottom: 0;
   z-index: 10;
-  max-height: min(52dvh, 360px);
+  max-height: min(52svh, 360px);
   display: flex;
   flex-direction: column;
   border-radius: 18px 18px 0 0;
@@ -15,6 +15,8 @@
   box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.35);
   animation: sheet-up 240ms ease both;
   padding: 0.65rem 1rem calc(0.85rem + var(--safe-bottom));
+  /* Avoid layout thrash when switching the selected player */
+  contain: layout style;
 }
 
 .player-sheet__handle {
