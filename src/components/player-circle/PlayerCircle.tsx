@@ -45,6 +45,7 @@ export const PlayerCircle = ({
               player={player}
               x={position.x}
               y={position.y}
+              quarter={position.quarter}
               isSelected={player.id === selectedPlayerId}
               onSelect={onSelectPlayer}
             />
