@@ -20,7 +20,6 @@ export const PlayerSheet = ({
   const nameInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    // Focus only when the sheet mounts — not on every new player while open
     nameInputRef.current?.focus({ preventScroll: true })
   }, [])
 
@@ -33,41 +32,50 @@ export const PlayerSheet = ({
   }
 
   return (
-    <section className="player-sheet" aria-label="Заметки игрока">
-      <div className="player-sheet__handle" aria-hidden="true" />
-      <div className="player-sheet__header">
-        <h2 className="player-sheet__title">Игрок</h2>
-        <button type="button" className="btn-ghost" onClick={onClose}>
-          Закрыть
-        </button>
-      </div>
-      <div className="player-sheet__body">
-        <div className="field">
-          <label htmlFor="player-name">Имя</label>
-          <input
-            id="player-name"
-            ref={nameInputRef}
-            type="text"
-            value={player.name}
-            onChange={(event) => onNameChange(player.id, event.target.value)}
-            placeholder="Имя игрока"
-            autoComplete="off"
-            enterKeyHint="done"
-          />
+    <div
+      className="player-sheet-backdrop"
+      onClick={onClose}
+      role="presentation"
+    >
+      <section
+        className="player-sheet"
+        aria-label="Заметки игрока"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="player-sheet__header">
+          <h2 className="player-sheet__title">Игрок</h2>
+          <button type="button" className="btn-ghost" onClick={onClose}>
+            Закрыть
+          </button>
         </div>
-        <div className="field">
-          <label htmlFor="player-notes">Заметки</label>
-          <textarea
-            id="player-notes"
-            value={player.notes}
-            onChange={(event) => onNotesChange(player.id, event.target.value)}
-            placeholder="Подозрения, факты, роли…"
-          />
+        <div className="player-sheet__body">
+          <div className="field">
+            <label htmlFor="player-name">Имя</label>
+            <input
+              id="player-name"
+              ref={nameInputRef}
+              type="text"
+              value={player.name}
+              onChange={(event) => onNameChange(player.id, event.target.value)}
+              placeholder="Имя игрока"
+              autoComplete="off"
+              enterKeyHint="done"
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="player-notes">Заметки</label>
+            <textarea
+              id="player-notes"
+              value={player.notes}
+              onChange={(event) => onNotesChange(player.id, event.target.value)}
+              placeholder="Подозрения, факты, роли…"
+            />
+          </div>
+          <button type="button" className="btn-danger" onClick={handleRemove}>
+            Удалить игрока
+          </button>
         </div>
-        <button type="button" className="btn-danger" onClick={handleRemove}>
-          Удалить игрока
-        </button>
-      </div>
-    </section>
+      </section>
+    </div>
   )
 }
