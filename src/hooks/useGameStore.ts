@@ -4,12 +4,14 @@ import {
   MAX_PLAYERS,
   type IGameState,
   type IPlayer,
+  type PlayerMarkColorT,
 } from '../types/game'
 
 const createPlayer = (index: number): IPlayer => ({
   id: crypto.randomUUID(),
   name: `Игрок ${index}`,
   notes: '',
+  markColor: null,
 })
 
 export const useGameStore = () => {
@@ -122,6 +124,21 @@ export const useGameStore = () => {
     [persistPlayers],
   )
 
+  const togglePlayerMarkColor = useCallback(
+    (playerId: string, color: PlayerMarkColorT) => {
+      setState((prev) => {
+        const players = prev.players.map((player) => {
+          if (player.id !== playerId) return player
+          const markColor = player.markColor === color ? null : color
+          return { ...player, markColor }
+        })
+        persistPlayers(players)
+        return { ...prev, players }
+      })
+    },
+    [persistPlayers],
+  )
+
   const clearTable = useCallback(() => {
     setState({
       players: [],
@@ -139,6 +156,7 @@ export const useGameStore = () => {
     selectPlayer,
     updatePlayerName,
     updatePlayerNotes,
+    togglePlayerMarkColor,
     removePlayer,
     clearTable,
   }

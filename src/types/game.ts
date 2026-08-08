@@ -1,7 +1,11 @@
+export type PlayerMarkColorT = 'blue' | 'red'
+
 export interface IPlayer {
   id: string
   name: string
   notes: string
+  /** Seat border mark; null = default gray. */
+  markColor: PlayerMarkColorT | null
 }
 
 export interface IGameState {

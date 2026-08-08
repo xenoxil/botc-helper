@@ -1,4 +1,4 @@
-import type { IGameState, IPlayer } from '../types/game'
+import type { IGameState, IPlayer, PlayerMarkColorT } from '../types/game'
 
 export const STORAGE_KEY = 'botc-helper:v1'
 
@@ -6,14 +6,26 @@ interface IStoredGame {
   players: IPlayer[]
 }
 
-const isPlayer = (value: unknown): value is IPlayer => {
-  if (!value || typeof value !== 'object') return false
+const isMarkColor = (value: unknown): value is PlayerMarkColorT =>
+  value === 'blue' || value === 'red'
+
+const normalizePlayer = (value: unknown): IPlayer | null => {
+  if (!value || typeof value !== 'object') return null
   const player = value as Record<string, unknown>
-  return (
-    typeof player.id === 'string' &&
-    typeof player.name === 'string' &&
-    typeof player.notes === 'string'
-  )
+  if (
+    typeof player.id !== 'string' ||
+    typeof player.name !== 'string' ||
+    typeof player.notes !== 'string'
+  ) {
+    return null
+  }
+
+  return {
+    id: player.id,
+    name: player.name,
+    notes: player.notes,
+    markColor: isMarkColor(player.markColor) ? player.markColor : null,
+  }
 }
 
 export const loadGameState = (): Pick<IGameState, 'players'> => {
@@ -28,7 +40,9 @@ export const loadGameState = (): Pick<IGameState, 'players'> => {
     if (!Array.isArray(data.players)) return { players: [] }
 
     return {
-      players: data.players.filter(isPlayer),
+      players: data.players
+        .map(normalizePlayer)
+        .filter((player): player is IPlayer => player !== null),
     }
   } catch {
     return { players: [] }

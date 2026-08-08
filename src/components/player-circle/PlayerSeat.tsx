@@ -32,6 +32,7 @@ export const PlayerSeat = ({
     `player-seat--${quarter}`,
     isEntering ? 'player-seat--enter' : '',
     isSelected ? 'player-seat--selected' : '',
+    player.markColor ? `player-seat--mark-${player.markColor}` : '',
     hasNotes ? '' : 'player-seat--empty-notes',
   ]
     .filter(Boolean)

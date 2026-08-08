@@ -15,6 +15,7 @@ function App() {
     selectPlayer,
     updatePlayerName,
     updatePlayerNotes,
+    togglePlayerMarkColor,
     removePlayer,
     clearTable,
   } = useGameStore()
@@ -52,6 +53,7 @@ function App() {
             onClose={() => selectPlayer(null)}
             onNameChange={updatePlayerName}
             onNotesChange={updatePlayerNotes}
+            onToggleMarkColor={togglePlayerMarkColor}
             onRemove={removePlayer}
           />
         ) : null}
