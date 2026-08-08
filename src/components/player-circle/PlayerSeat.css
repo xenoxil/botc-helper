@@ -68,10 +68,6 @@
   color: var(--ink-muted);
 }
 
-.player-seat--empty-notes .player-seat__notes {
-  opacity: 0.45;
-}
-
 /* Top quarter: name above, notes below (toward center) */
 .player-seat--top .player-seat__name {
   left: 50%;

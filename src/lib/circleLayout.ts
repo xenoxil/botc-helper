@@ -51,8 +51,7 @@ export const getPlayerInitials = (name: string): string => {
 }
 
 export const getNotesPreview = (notes: string): string => {
-  const trimmed = notes.trim().replace(/\s+/g, ' ')
-  return trimmed.length > 0 ? trimmed : '…'
+  return notes.trim().replace(/\s+/g, ' ')
 }
 
 const angularDistance = (a: number, b: number): number => {

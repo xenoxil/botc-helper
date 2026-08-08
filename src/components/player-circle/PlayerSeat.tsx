@@ -45,7 +45,6 @@ export const PlayerSeat = ({
     isEntering ? 'player-seat--enter' : '',
     isSelected ? 'player-seat--selected' : '',
     player.markColor ? `player-seat--mark-${player.markColor}` : '',
-    hasNotes ? '' : 'player-seat--empty-notes',
     isDragging ? 'player-seat--dragging' : '',
     isDropTarget ? 'player-seat--drop-target' : '',
     isDimmed ? 'player-seat--dimmed' : '',
@@ -73,11 +72,17 @@ export const PlayerSeat = ({
         event.preventDefault()
       }}
       aria-pressed={isSelected}
-      aria-label={`${player.name || 'Без имени'}: ${notesPreview}`}
+      aria-label={
+        hasNotes
+          ? `${player.name || 'Без имени'}: ${notesPreview}`
+          : player.name || 'Без имени'
+      }
     >
       <span className="player-seat__name">{player.name || 'Без имени'}</span>
       <span className="player-seat__avatar">{getPlayerInitials(player.name)}</span>
-      <span className="player-seat__notes">{notesPreview}</span>
+      {hasNotes ? (
+        <span className="player-seat__notes">{notesPreview}</span>
+      ) : null}
     </button>
   )
 }
