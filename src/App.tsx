@@ -24,6 +24,7 @@ function App() {
   return (
     <div className="app-shell">
       <Toolbar
+        playerCount={players.length}
         canAdd={canAddPlayer}
         canClear={players.length > 0}
         onAdd={addPlayer}

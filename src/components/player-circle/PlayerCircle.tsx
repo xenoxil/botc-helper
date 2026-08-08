@@ -9,14 +9,6 @@ interface IPlayerCircleProps {
   onSelectPlayer: (playerId: string) => void
 }
 
-const formatPlayerCountLabel = (count: number): string => {
-  const mod10 = count % 10
-  const mod100 = count % 100
-  if (mod10 === 1 && mod100 !== 11) return 'игрок'
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'игрока'
-  return 'игроков'
-}
-
 export const PlayerCircle = ({
   players,
   selectedPlayerId,
@@ -28,12 +20,8 @@ export const PlayerCircle = ({
     <div className="player-circle">
       <div className="player-circle__stage" aria-label="Круг игроков">
         <div className="player-circle__ring" aria-hidden="true" />
-        <div className="player-circle__center">
-          <span className="player-circle__mark" aria-hidden="true" />
-          <span className="player-circle__count">{players.length}</span>
-          <span className="player-circle__label">
-            {formatPlayerCountLabel(players.length)}
-          </span>
+        <div className="player-circle__center" aria-hidden="true">
+          <span className="player-circle__mark" />
         </div>
         {players.map((player, index) => {
           const position = positions[index]

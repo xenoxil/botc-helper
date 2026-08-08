@@ -1,11 +1,17 @@
 .toolbar {
   display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.5rem 0.85rem 0.45rem;
+  border-bottom: 1px solid rgba(232, 224, 212, 0.06);
+}
+
+.toolbar__row {
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  min-height: var(--toolbar-h);
-  padding: 0.5rem 0.85rem;
-  border-bottom: 1px solid rgba(232, 224, 212, 0.06);
+  min-height: calc(var(--toolbar-h) - 8px);
 }
 
 .toolbar__brand {
@@ -38,4 +44,19 @@
 .toolbar__add:active:not(:disabled) {
   background: var(--accent-hover);
   transform: scale(0.96);
+}
+
+.toolbar__count {
+  margin: 0;
+  padding-bottom: 0.15rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+}
+
+.toolbar__count-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ink);
 }
