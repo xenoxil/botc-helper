@@ -1,5 +1,7 @@
+import { useCallback } from 'react'
 import type { IPlayer } from '../../types/game'
 import { getCirclePositions } from '../../lib/circleLayout'
+import { useCircleSeatDrag } from '../../hooks/useCircleSeatDrag'
 import { PlayerSeat } from './PlayerSeat'
 import './PlayerCircle.css'
 
@@ -7,18 +9,45 @@ interface IPlayerCircleProps {
   players: IPlayer[]
   selectedPlayerId: string | null
   onSelectPlayer: (playerId: string) => void
+  onSwapPlayers: (playerIdA: string, playerIdB: string) => void
 }
 
 export const PlayerCircle = ({
   players,
   selectedPlayerId,
   onSelectPlayer,
+  onSwapPlayers,
 }: IPlayerCircleProps) => {
   const positions = getCirclePositions(players.length)
 
+  const getPlayerIdAtIndex = useCallback(
+    (index: number) => players[index]?.id,
+    [players],
+  )
+
+  const {
+    stageRef,
+    draggingPlayerId,
+    dropTargetIndex,
+    isDragging,
+    onSeatPointerDown,
+    onSeatPointerMove,
+    onSeatPointerUp,
+    onSeatPointerCancel,
+  } = useCircleSeatDrag({
+    playerCount: players.length,
+    getPlayerIdAtIndex,
+    onSwap: onSwapPlayers,
+    onSelect: onSelectPlayer,
+  })
+
   return (
-    <div className="player-circle">
-      <div className="player-circle__stage" aria-label="Круг игроков">
+    <div className={`player-circle${isDragging ? ' player-circle--dragging' : ''}`}>
+      <div
+        ref={stageRef}
+        className="player-circle__stage"
+        aria-label="Круг игроков"
+      >
         <div className="player-circle__ring" aria-hidden="true" />
         <div className="player-circle__center" aria-hidden="true">
           <span className="player-circle__mark" />
@@ -35,7 +64,19 @@ export const PlayerCircle = ({
               y={position.y}
               quarter={position.quarter}
               isSelected={player.id === selectedPlayerId}
-              onSelect={onSelectPlayer}
+              isDragging={player.id === draggingPlayerId}
+              isDropTarget={
+                isDragging &&
+                dropTargetIndex === index &&
+                player.id !== draggingPlayerId
+              }
+              isDimmed={isDragging && player.id !== draggingPlayerId}
+              onPointerDown={(event) =>
+                onSeatPointerDown(player.id, index, event)
+              }
+              onPointerMove={onSeatPointerMove}
+              onPointerUp={onSeatPointerUp}
+              onPointerCancel={onSeatPointerCancel}
             />
           )
         })}

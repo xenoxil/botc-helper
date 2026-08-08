@@ -16,6 +16,7 @@ function App() {
     updatePlayerName,
     updatePlayerNotes,
     togglePlayerMarkColor,
+    swapPlayers,
     removePlayer,
     clearTable,
   } = useGameStore()
@@ -37,6 +38,7 @@ function App() {
             players={players}
             selectedPlayerId={selectedPlayerId}
             onSelectPlayer={selectPlayer}
+            onSwapPlayers={swapPlayers}
           />
         ) : (
           <EmptyState

@@ -54,3 +54,41 @@ export const getNotesPreview = (notes: string): string => {
   const trimmed = notes.trim().replace(/\s+/g, ' ')
   return trimmed.length > 0 ? trimmed : '…'
 }
+
+const angularDistance = (a: number, b: number): number => {
+  const delta = Math.abs(a - b) % (Math.PI * 2)
+  return Math.min(delta, Math.PI * 2 - delta)
+}
+
+/**
+ * Nearest seat index by angle from stage center.
+ * `localX` / `localY` are coordinates in the stage's local px space.
+ */
+export const getNearestSeatIndex = (
+  localX: number,
+  localY: number,
+  stageSize: number,
+  count: number,
+): number => {
+  if (count <= 0 || stageSize <= 0) return -1
+
+  const center = stageSize / 2
+  const dx = localX - center
+  const dy = localY - center
+  if (dx === 0 && dy === 0) return 0
+
+  const pointerAngle = Math.atan2(dy, dx)
+  let bestIndex = 0
+  let bestDistance = Number.POSITIVE_INFINITY
+
+  for (let index = 0; index < count; index += 1) {
+    const seatAngle = -Math.PI / 2 + (2 * Math.PI * index) / count
+    const distance = angularDistance(pointerAngle, seatAngle)
+    if (distance < bestDistance) {
+      bestDistance = distance
+      bestIndex = index
+    }
+  }
+
+  return bestIndex
+}

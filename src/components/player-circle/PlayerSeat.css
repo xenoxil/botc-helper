@@ -7,8 +7,14 @@
   min-height: 44px;
   padding: 0;
   transform: translate(-50%, -50%);
-  transition: left 280ms ease, top 280ms ease;
+  transition:
+    left 280ms ease,
+    top 280ms ease,
+    opacity 160ms ease;
   z-index: 1;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .player-seat--enter {
@@ -154,6 +160,38 @@
 .player-seat--selected .player-seat__notes {
   color: var(--ink);
   opacity: 0.85;
+}
+
+.player-seat--dragging {
+  z-index: 5;
+}
+
+.player-seat--dragging .player-seat__avatar {
+  transform: scale(1.14);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.player-seat--dimmed {
+  opacity: 0.55;
+}
+
+.player-seat--drop-target {
+  z-index: 4;
+}
+
+.player-seat--drop-target .player-seat__avatar {
+  box-shadow: 0 0 0 3px rgba(201, 148, 62, 0.55);
+  animation: drop-pulse 700ms ease infinite;
+}
+
+@keyframes drop-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px rgba(201, 148, 62, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(201, 148, 62, 0.7);
+  }
 }
 
 @keyframes seat-in {

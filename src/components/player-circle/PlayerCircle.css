@@ -8,6 +8,10 @@
   overflow: hidden;
 }
 
+.player-circle--dragging {
+  cursor: grabbing;
+}
+
 .player-circle__stage {
   position: relative;
   width: min(100%, calc(100svh - var(--toolbar-h) - 12rem));

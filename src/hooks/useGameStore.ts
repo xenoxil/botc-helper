@@ -139,6 +139,29 @@ export const useGameStore = () => {
     [persistPlayers],
   )
 
+  const swapPlayers = useCallback(
+    (playerIdA: string, playerIdB: string) => {
+      if (playerIdA === playerIdB) return
+
+      setState((prev) => {
+        const indexA = prev.players.findIndex((player) => player.id === playerIdA)
+        const indexB = prev.players.findIndex((player) => player.id === playerIdB)
+        if (indexA < 0 || indexB < 0) return prev
+
+        const players = [...prev.players]
+        const playerA = players[indexA]
+        const playerB = players[indexB]
+        if (!playerA || !playerB) return prev
+
+        players[indexA] = playerB
+        players[indexB] = playerA
+        persistPlayers(players)
+        return { ...prev, players }
+      })
+    },
+    [persistPlayers],
+  )
+
   const clearTable = useCallback(() => {
     setState({
       players: [],
@@ -157,6 +180,7 @@ export const useGameStore = () => {
     updatePlayerName,
     updatePlayerNotes,
     togglePlayerMarkColor,
+    swapPlayers,
     removePlayer,
     clearTable,
   }
