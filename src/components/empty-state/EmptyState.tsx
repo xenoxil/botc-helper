@@ -4,17 +4,13 @@ import './EmptyState.css'
 interface IEmptyStateProps {
   players: IPlayer[]
   selectedPlayerId: string | null
-  onAdd: () => void
   onSelectPlayer: (playerId: string) => void
-  canAdd: boolean
 }
 
 export const EmptyState = ({
   players,
   selectedPlayerId,
-  onAdd,
   onSelectPlayer,
-  canAdd,
 }: IEmptyStateProps) => {
   const isPartial = players.length > 0
 
@@ -26,8 +22,8 @@ export const EmptyState = ({
       </h2>
       <p className="empty-state__text">
         {isPartial
-          ? `Сейчас ${players.length}. Добавьте ещё, чтобы собрать круг (от 3 игроков).`
-          : 'Добавьте игроков за стол — они выстроятся по кругу, как за игрой.'}
+          ? `Сейчас ${players.length}. Нажмите «+» сверху, чтобы собрать круг (от 3 игроков).`
+          : 'Нажмите «+» сверху, чтобы добавить игроков — они выстроятся по кругу.'}
       </p>
       {isPartial ? (
         <ul className="empty-state__list">
@@ -48,14 +44,6 @@ export const EmptyState = ({
           ))}
         </ul>
       ) : null}
-      <button
-        type="button"
-        className="btn-primary"
-        onClick={onAdd}
-        disabled={!canAdd}
-      >
-        Добавить игрока
-      </button>
     </div>
   )
 }

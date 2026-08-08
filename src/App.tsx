@@ -53,9 +53,7 @@ function App() {
           <EmptyState
             players={players}
             selectedPlayerId={selectedPlayerId}
-            onAdd={addPlayer}
             onSelectPlayer={selectPlayer}
-            canAdd={canAddPlayer}
           />
         )}
         {selectedPlayer ? (
