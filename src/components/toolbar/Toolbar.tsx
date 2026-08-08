@@ -6,24 +6,29 @@ import './Toolbar.css'
 interface IToolbarProps {
   playerCount: number
   setupPlayerCount: number
+  sharedNotes: string
   canAdd: boolean
   canClear: boolean
   onAdd: () => void
   onClear: () => void
   onOpenSettings: () => void
+  onOpenSharedNotes: () => void
   onSetupPlayerCountChange: (count: number) => void
 }
 
 export const Toolbar = ({
   playerCount,
   setupPlayerCount,
+  sharedNotes,
   canAdd,
   canClear,
   onAdd,
   onClear,
   onOpenSettings,
+  onOpenSharedNotes,
   onSetupPlayerCountChange,
 }: IToolbarProps) => {
+  const notesPreview = sharedNotes.trim()
   const handleClear = () => {
     if (!canClear) return
     const confirmed = window.confirm(
@@ -120,6 +125,24 @@ export const Toolbar = ({
           playerCount={playerCount}
           setupPlayerCount={setupPlayerCount}
         />
+      </div>
+      <div className="toolbar__shared-notes">
+        <button
+          type="button"
+          className="toolbar__shared-notes-btn"
+          onClick={onOpenSharedNotes}
+        >
+          Общие заметки
+        </button>
+        {notesPreview ? (
+          <button
+            type="button"
+            className="toolbar__shared-notes-preview"
+            onClick={onOpenSharedNotes}
+          >
+            {notesPreview}
+          </button>
+        ) : null}
       </div>
     </header>
   )

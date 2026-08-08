@@ -128,3 +128,50 @@
 .toolbar__setup-select:focus {
   border-color: rgba(179, 58, 58, 0.45);
 }
+
+.toolbar__shared-notes {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+
+.toolbar__shared-notes-btn {
+  min-height: 40px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(232, 224, 212, 0.12);
+  background: rgba(28, 36, 46, 0.65);
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.toolbar__shared-notes-btn:active {
+  background: rgba(28, 36, 46, 0.9);
+  border-color: rgba(232, 224, 212, 0.2);
+}
+
+.toolbar__shared-notes-preview {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  cursor: pointer;
+}
+
+.toolbar__shared-notes-preview:active {
+  color: var(--ink);
+}

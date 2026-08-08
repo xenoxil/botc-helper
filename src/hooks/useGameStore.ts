@@ -11,7 +11,7 @@ import {
 
 type PersistSnapshotT = Pick<
   IGameState,
-  'players' | 'layoutMode' | 'setupPlayerCount'
+  'players' | 'layoutMode' | 'setupPlayerCount' | 'sharedNotes'
 >
 
 const createPlayer = (index: number): IPlayer => ({
@@ -21,6 +21,13 @@ const createPlayer = (index: number): IPlayer => ({
   markColor: null,
 })
 
+const toSnapshot = (state: IGameState): PersistSnapshotT => ({
+  players: state.players,
+  layoutMode: state.layoutMode,
+  setupPlayerCount: state.setupPlayerCount,
+  sharedNotes: state.sharedNotes,
+})
+
 export const useGameStore = () => {
   const [state, setState] = useState<IGameState>(() => {
     const stored = loadGameState()
@@ -28,24 +35,17 @@ export const useGameStore = () => {
       players: stored.players,
       layoutMode: stored.layoutMode,
       setupPlayerCount: stored.setupPlayerCount,
+      sharedNotes: stored.sharedNotes,
       selectedPlayerId: null,
     }
   })
 
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const persistSnapshotRef = useRef<PersistSnapshotT>({
-    players: state.players,
-    layoutMode: state.layoutMode,
-    setupPlayerCount: state.setupPlayerCount,
-  })
+  const persistSnapshotRef = useRef<PersistSnapshotT>(toSnapshot(state))
 
   useEffect(() => {
-    persistSnapshotRef.current = {
-      players: state.players,
-      layoutMode: state.layoutMode,
-      setupPlayerCount: state.setupPlayerCount,
-    }
-  }, [state.players, state.layoutMode, state.setupPlayerCount])
+    persistSnapshotRef.current = toSnapshot(state)
+  }, [state])
 
   const persistState = useCallback((next: PersistSnapshotT, debounceMs = 0) => {
     if (saveTimerRef.current) {
@@ -78,16 +78,9 @@ export const useGameStore = () => {
     state.players.find((player) => player.id === state.selectedPlayerId) ??
     null
 
-  const persistFrom = useCallback(
-    (prev: IGameState, players: IPlayer[], debounceMs = 0) => {
-      persistState(
-        {
-          players,
-          layoutMode: prev.layoutMode,
-          setupPlayerCount: prev.setupPlayerCount,
-        },
-        debounceMs,
-      )
+  const persistPatch = useCallback(
+    (prev: IGameState, patch: Partial<PersistSnapshotT>, debounceMs = 0) => {
+      persistState({ ...toSnapshot(prev), ...patch }, debounceMs)
     },
     [persistState],
   )
@@ -98,7 +91,7 @@ export const useGameStore = () => {
 
       const player = createPlayer(prev.players.length + 1)
       const players = [...prev.players, player]
-      persistFrom(prev, players)
+      persistPatch(prev, { players })
 
       return {
         ...prev,
@@ -106,7 +99,7 @@ export const useGameStore = () => {
         selectedPlayerId: player.id,
       }
     })
-  }, [persistFrom])
+  }, [persistPatch])
 
   const selectPlayer = useCallback((playerId: string | null) => {
     setState((prev) => ({
@@ -121,11 +114,11 @@ export const useGameStore = () => {
         const players = prev.players.map((player) =>
           player.id === playerId ? { ...player, name } : player,
         )
-        persistFrom(prev, players)
+        persistPatch(prev, { players })
         return { ...prev, players }
       })
     },
-    [persistFrom],
+    [persistPatch],
   )
 
   const updatePlayerNotes = useCallback(
@@ -134,18 +127,18 @@ export const useGameStore = () => {
         const players = prev.players.map((player) =>
           player.id === playerId ? { ...player, notes } : player,
         )
-        persistFrom(prev, players, 200)
+        persistPatch(prev, { players }, 200)
         return { ...prev, players }
       })
     },
-    [persistFrom],
+    [persistPatch],
   )
 
   const removePlayer = useCallback(
     (playerId: string) => {
       setState((prev) => {
         const players = prev.players.filter((player) => player.id !== playerId)
-        persistFrom(prev, players)
+        persistPatch(prev, { players })
         return {
           ...prev,
           players,
@@ -154,7 +147,7 @@ export const useGameStore = () => {
         }
       })
     },
-    [persistFrom],
+    [persistPatch],
   )
 
   const togglePlayerMarkColor = useCallback(
@@ -165,11 +158,11 @@ export const useGameStore = () => {
           const markColor = player.markColor === color ? null : color
           return { ...player, markColor }
         })
-        persistFrom(prev, players)
+        persistPatch(prev, { players })
         return { ...prev, players }
       })
     },
-    [persistFrom],
+    [persistPatch],
   )
 
   const swapPlayers = useCallback(
@@ -188,26 +181,22 @@ export const useGameStore = () => {
 
         players[indexA] = playerB
         players[indexB] = playerA
-        persistFrom(prev, players)
+        persistPatch(prev, { players })
         return { ...prev, players }
       })
     },
-    [persistFrom],
+    [persistPatch],
   )
 
   const setLayoutMode = useCallback(
     (layoutMode: LayoutModeT) => {
       setState((prev) => {
         if (prev.layoutMode === layoutMode) return prev
-        persistState({
-          players: prev.players,
-          layoutMode,
-          setupPlayerCount: prev.setupPlayerCount,
-        })
+        persistPatch(prev, { layoutMode })
         return { ...prev, layoutMode }
       })
     },
-    [persistState],
+    [persistPatch],
   )
 
   const setSetupPlayerCount = useCallback(
@@ -215,27 +204,34 @@ export const useGameStore = () => {
       const nextCount = normalizeSetupPlayerCount(setupPlayerCount)
       setState((prev) => {
         if (prev.setupPlayerCount === nextCount) return prev
-        persistState({
-          players: prev.players,
-          layoutMode: prev.layoutMode,
-          setupPlayerCount: nextCount,
-        })
+        persistPatch(prev, { setupPlayerCount: nextCount })
         return { ...prev, setupPlayerCount: nextCount }
       })
     },
-    [persistState],
+    [persistPatch],
+  )
+
+  const updateSharedNotes = useCallback(
+    (sharedNotes: string) => {
+      setState((prev) => {
+        persistPatch(prev, { sharedNotes }, 200)
+        return { ...prev, sharedNotes }
+      })
+    },
+    [persistPatch],
   )
 
   const clearTable = useCallback(() => {
     setState((prev) => {
-      persistFrom(prev, [])
+      persistPatch(prev, { players: [], sharedNotes: '' })
       return {
         ...prev,
         players: [],
+        sharedNotes: '',
         selectedPlayerId: null,
       }
     })
-  }, [persistFrom])
+  }, [persistPatch])
 
   return {
     players: state.players,
@@ -243,6 +239,7 @@ export const useGameStore = () => {
     selectedPlayer,
     layoutMode: state.layoutMode,
     setupPlayerCount: state.setupPlayerCount,
+    sharedNotes: state.sharedNotes,
     canAddPlayer: state.players.length < MAX_PLAYERS,
     addPlayer,
     selectPlayer,
@@ -252,6 +249,7 @@ export const useGameStore = () => {
     swapPlayers,
     setLayoutMode,
     setSetupPlayerCount,
+    updateSharedNotes,
     removePlayer,
     clearTable,
   }

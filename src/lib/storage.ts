@@ -15,11 +15,12 @@ interface IStoredGame {
   players: IPlayer[]
   layoutMode?: LayoutModeT
   setupPlayerCount?: number
+  sharedNotes?: string
 }
 
 export type PersistedGameT = Pick<
   IGameState,
-  'players' | 'layoutMode' | 'setupPlayerCount'
+  'players' | 'layoutMode' | 'setupPlayerCount' | 'sharedNotes'
 >
 
 const isMarkColor = (value: unknown): value is PlayerMarkColorT =>
@@ -47,25 +48,20 @@ const normalizePlayer = (value: unknown): IPlayer | null => {
   }
 }
 
+const emptyPersisted = (): PersistedGameT => ({
+  players: [],
+  layoutMode: 'circle',
+  setupPlayerCount: DEFAULT_SETUP_PLAYERS,
+  sharedNotes: '',
+})
+
 export const loadGameState = (): PersistedGameT => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) {
-      return {
-        players: [],
-        layoutMode: 'circle',
-        setupPlayerCount: DEFAULT_SETUP_PLAYERS,
-      }
-    }
+    if (!raw) return emptyPersisted()
 
     const parsed: unknown = JSON.parse(raw)
-    if (!parsed || typeof parsed !== 'object') {
-      return {
-        players: [],
-        layoutMode: 'circle',
-        setupPlayerCount: DEFAULT_SETUP_PLAYERS,
-      }
-    }
+    if (!parsed || typeof parsed !== 'object') return emptyPersisted()
 
     const data = parsed as Partial<IStoredGame>
     const players = Array.isArray(data.players)
@@ -78,13 +74,10 @@ export const loadGameState = (): PersistedGameT => {
       players,
       layoutMode: isLayoutMode(data.layoutMode) ? data.layoutMode : 'circle',
       setupPlayerCount: normalizeSetupPlayerCount(data.setupPlayerCount),
+      sharedNotes: typeof data.sharedNotes === 'string' ? data.sharedNotes : '',
     }
   } catch {
-    return {
-      players: [],
-      layoutMode: 'circle',
-      setupPlayerCount: DEFAULT_SETUP_PLAYERS,
-    }
+    return emptyPersisted()
   }
 }
 
@@ -93,6 +86,7 @@ export const saveGameState = (state: PersistedGameT): void => {
     players: state.players,
     layoutMode: state.layoutMode,
     setupPlayerCount: state.setupPlayerCount,
+    sharedNotes: state.sharedNotes,
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
 }
