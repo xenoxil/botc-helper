@@ -1,5 +1,7 @@
 export type PlayerMarkColorT = 'blue' | 'red'
 
+export type LayoutModeT = 'circle' | 'square'
+
 export interface IPlayer {
   id: string
   name: string
@@ -11,6 +13,7 @@ export interface IPlayer {
 export interface IGameState {
   players: IPlayer[]
   selectedPlayerId: string | null
+  layoutMode: LayoutModeT
 }
 
 export type GameStateT = IGameState
