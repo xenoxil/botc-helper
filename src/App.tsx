@@ -13,6 +13,7 @@ function App() {
     selectedPlayerId,
     selectedPlayer,
     layoutMode,
+    setupPlayerCount,
     canAddPlayer,
     addPlayer,
     selectPlayer,
@@ -21,6 +22,7 @@ function App() {
     togglePlayerMarkColor,
     swapPlayers,
     setLayoutMode,
+    setSetupPlayerCount,
     removePlayer,
     clearTable,
   } = useGameStore()
@@ -35,11 +37,13 @@ function App() {
     <div className="app-shell">
       <Toolbar
         playerCount={players.length}
+        setupPlayerCount={setupPlayerCount}
         canAdd={canAddPlayer}
         canClear={players.length > 0}
         onAdd={addPlayer}
         onClear={clearTable}
         onOpenSettings={() => setIsSettingsOpen(true)}
+        onSetupPlayerCountChange={setSetupPlayerCount}
       />
       <main className="app-main">
         {showCircleLayout ? (

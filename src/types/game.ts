@@ -14,6 +14,8 @@ export interface IGameState {
   players: IPlayer[]
   selectedPlayerId: string | null
   layoutMode: LayoutModeT
+  /** Script setup size for T/O/M/D (5–15), independent of seat count. */
+  setupPlayerCount: number
 }
 
 export type GameStateT = IGameState

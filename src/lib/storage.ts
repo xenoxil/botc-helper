@@ -4,15 +4,23 @@ import type {
   LayoutModeT,
   PlayerMarkColorT,
 } from '../types/game'
+import {
+  DEFAULT_SETUP_PLAYERS,
+  normalizeSetupPlayerCount,
+} from './setupDistribution'
 
 export const STORAGE_KEY = 'botc-helper:v1'
 
 interface IStoredGame {
   players: IPlayer[]
   layoutMode?: LayoutModeT
+  setupPlayerCount?: number
 }
 
-export type PersistedGameT = Pick<IGameState, 'players' | 'layoutMode'>
+export type PersistedGameT = Pick<
+  IGameState,
+  'players' | 'layoutMode' | 'setupPlayerCount'
+>
 
 const isMarkColor = (value: unknown): value is PlayerMarkColorT =>
   value === 'blue' || value === 'red'
@@ -42,11 +50,21 @@ const normalizePlayer = (value: unknown): IPlayer | null => {
 export const loadGameState = (): PersistedGameT => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { players: [], layoutMode: 'circle' }
+    if (!raw) {
+      return {
+        players: [],
+        layoutMode: 'circle',
+        setupPlayerCount: DEFAULT_SETUP_PLAYERS,
+      }
+    }
 
     const parsed: unknown = JSON.parse(raw)
     if (!parsed || typeof parsed !== 'object') {
-      return { players: [], layoutMode: 'circle' }
+      return {
+        players: [],
+        layoutMode: 'circle',
+        setupPlayerCount: DEFAULT_SETUP_PLAYERS,
+      }
     }
 
     const data = parsed as Partial<IStoredGame>
@@ -59,9 +77,14 @@ export const loadGameState = (): PersistedGameT => {
     return {
       players,
       layoutMode: isLayoutMode(data.layoutMode) ? data.layoutMode : 'circle',
+      setupPlayerCount: normalizeSetupPlayerCount(data.setupPlayerCount),
     }
   } catch {
-    return { players: [], layoutMode: 'circle' }
+    return {
+      players: [],
+      layoutMode: 'circle',
+      setupPlayerCount: DEFAULT_SETUP_PLAYERS,
+    }
   }
 }
 
@@ -69,6 +92,7 @@ export const saveGameState = (state: PersistedGameT): void => {
   const payload: IStoredGame = {
     players: state.players,
     layoutMode: state.layoutMode,
+    setupPlayerCount: state.setupPlayerCount,
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
 }

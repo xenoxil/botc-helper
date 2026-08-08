@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { loadGameState, saveGameState } from '../lib/storage'
+import { normalizeSetupPlayerCount } from '../lib/setupDistribution'
 import {
   MAX_PLAYERS,
   type IGameState,
@@ -7,6 +8,11 @@ import {
   type LayoutModeT,
   type PlayerMarkColorT,
 } from '../types/game'
+
+type PersistSnapshotT = Pick<
+  IGameState,
+  'players' | 'layoutMode' | 'setupPlayerCount'
+>
 
 const createPlayer = (index: number): IPlayer => ({
   id: crypto.randomUUID(),
@@ -21,46 +27,43 @@ export const useGameStore = () => {
     return {
       players: stored.players,
       layoutMode: stored.layoutMode,
+      setupPlayerCount: stored.setupPlayerCount,
       selectedPlayerId: null,
     }
   })
 
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const persistSnapshotRef = useRef({
+  const persistSnapshotRef = useRef<PersistSnapshotT>({
     players: state.players,
     layoutMode: state.layoutMode,
+    setupPlayerCount: state.setupPlayerCount,
   })
 
   useEffect(() => {
     persistSnapshotRef.current = {
       players: state.players,
       layoutMode: state.layoutMode,
+      setupPlayerCount: state.setupPlayerCount,
     }
-  }, [state.players, state.layoutMode])
+  }, [state.players, state.layoutMode, state.setupPlayerCount])
 
-  const persistState = useCallback(
-    (
-      next: { players: IPlayer[]; layoutMode: LayoutModeT },
-      debounceMs = 0,
-    ) => {
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current)
-        saveTimerRef.current = null
-      }
+  const persistState = useCallback((next: PersistSnapshotT, debounceMs = 0) => {
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current)
+      saveTimerRef.current = null
+    }
 
-      const write = () => {
-        saveGameState(next)
-      }
+    const write = () => {
+      saveGameState(next)
+    }
 
-      if (debounceMs > 0) {
-        saveTimerRef.current = setTimeout(write, debounceMs)
-        return
-      }
+    if (debounceMs > 0) {
+      saveTimerRef.current = setTimeout(write, debounceMs)
+      return
+    }
 
-      write()
-    },
-    [],
-  )
+    write()
+  }, [])
 
   useEffect(() => {
     return () => {
@@ -75,13 +78,27 @@ export const useGameStore = () => {
     state.players.find((player) => player.id === state.selectedPlayerId) ??
     null
 
+  const persistFrom = useCallback(
+    (prev: IGameState, players: IPlayer[], debounceMs = 0) => {
+      persistState(
+        {
+          players,
+          layoutMode: prev.layoutMode,
+          setupPlayerCount: prev.setupPlayerCount,
+        },
+        debounceMs,
+      )
+    },
+    [persistState],
+  )
+
   const addPlayer = useCallback(() => {
     setState((prev) => {
       if (prev.players.length >= MAX_PLAYERS) return prev
 
       const player = createPlayer(prev.players.length + 1)
       const players = [...prev.players, player]
-      persistState({ players, layoutMode: prev.layoutMode })
+      persistFrom(prev, players)
 
       return {
         ...prev,
@@ -89,7 +106,7 @@ export const useGameStore = () => {
         selectedPlayerId: player.id,
       }
     })
-  }, [persistState])
+  }, [persistFrom])
 
   const selectPlayer = useCallback((playerId: string | null) => {
     setState((prev) => ({
@@ -104,11 +121,11 @@ export const useGameStore = () => {
         const players = prev.players.map((player) =>
           player.id === playerId ? { ...player, name } : player,
         )
-        persistState({ players, layoutMode: prev.layoutMode })
+        persistFrom(prev, players)
         return { ...prev, players }
       })
     },
-    [persistState],
+    [persistFrom],
   )
 
   const updatePlayerNotes = useCallback(
@@ -117,18 +134,18 @@ export const useGameStore = () => {
         const players = prev.players.map((player) =>
           player.id === playerId ? { ...player, notes } : player,
         )
-        persistState({ players, layoutMode: prev.layoutMode }, 200)
+        persistFrom(prev, players, 200)
         return { ...prev, players }
       })
     },
-    [persistState],
+    [persistFrom],
   )
 
   const removePlayer = useCallback(
     (playerId: string) => {
       setState((prev) => {
         const players = prev.players.filter((player) => player.id !== playerId)
-        persistState({ players, layoutMode: prev.layoutMode })
+        persistFrom(prev, players)
         return {
           ...prev,
           players,
@@ -137,7 +154,7 @@ export const useGameStore = () => {
         }
       })
     },
-    [persistState],
+    [persistFrom],
   )
 
   const togglePlayerMarkColor = useCallback(
@@ -148,11 +165,11 @@ export const useGameStore = () => {
           const markColor = player.markColor === color ? null : color
           return { ...player, markColor }
         })
-        persistState({ players, layoutMode: prev.layoutMode })
+        persistFrom(prev, players)
         return { ...prev, players }
       })
     },
-    [persistState],
+    [persistFrom],
   )
 
   const swapPlayers = useCallback(
@@ -171,19 +188,39 @@ export const useGameStore = () => {
 
         players[indexA] = playerB
         players[indexB] = playerA
-        persistState({ players, layoutMode: prev.layoutMode })
+        persistFrom(prev, players)
         return { ...prev, players }
       })
     },
-    [persistState],
+    [persistFrom],
   )
 
   const setLayoutMode = useCallback(
     (layoutMode: LayoutModeT) => {
       setState((prev) => {
         if (prev.layoutMode === layoutMode) return prev
-        persistState({ players: prev.players, layoutMode })
+        persistState({
+          players: prev.players,
+          layoutMode,
+          setupPlayerCount: prev.setupPlayerCount,
+        })
         return { ...prev, layoutMode }
+      })
+    },
+    [persistState],
+  )
+
+  const setSetupPlayerCount = useCallback(
+    (setupPlayerCount: number) => {
+      const nextCount = normalizeSetupPlayerCount(setupPlayerCount)
+      setState((prev) => {
+        if (prev.setupPlayerCount === nextCount) return prev
+        persistState({
+          players: prev.players,
+          layoutMode: prev.layoutMode,
+          setupPlayerCount: nextCount,
+        })
+        return { ...prev, setupPlayerCount: nextCount }
       })
     },
     [persistState],
@@ -191,20 +228,21 @@ export const useGameStore = () => {
 
   const clearTable = useCallback(() => {
     setState((prev) => {
-      persistState({ players: [], layoutMode: prev.layoutMode })
+      persistFrom(prev, [])
       return {
         ...prev,
         players: [],
         selectedPlayerId: null,
       }
     })
-  }, [persistState])
+  }, [persistFrom])
 
   return {
     players: state.players,
     selectedPlayerId: state.selectedPlayerId,
     selectedPlayer,
     layoutMode: state.layoutMode,
+    setupPlayerCount: state.setupPlayerCount,
     canAddPlayer: state.players.length < MAX_PLAYERS,
     addPlayer,
     selectPlayer,
@@ -213,6 +251,7 @@ export const useGameStore = () => {
     togglePlayerMarkColor,
     swapPlayers,
     setLayoutMode,
+    setSetupPlayerCount,
     removePlayer,
     clearTable,
   }

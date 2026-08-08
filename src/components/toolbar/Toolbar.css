@@ -41,9 +41,13 @@
   transition: background 160ms ease, color 160ms ease;
 }
 
-.toolbar__icon-btn:active {
+.toolbar__icon-btn:active:not(:disabled) {
   background: rgba(232, 224, 212, 0.06);
   color: var(--ink);
+}
+
+.toolbar__icon-btn:disabled {
+  opacity: 0.35;
 }
 
 .toolbar__add {
@@ -63,9 +67,17 @@
   transform: scale(0.96);
 }
 
+.toolbar__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.75rem;
+  padding-bottom: 0.15rem;
+}
+
 .toolbar__count {
   margin: 0;
-  padding-bottom: 0.15rem;
   font-size: 0.8rem;
   letter-spacing: 0.04em;
   color: var(--ink-muted);
@@ -76,4 +88,43 @@
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--ink);
+}
+
+.toolbar__setup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.toolbar__setup-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.toolbar__setup-select {
+  min-height: 28px;
+  border: 1px solid rgba(232, 224, 212, 0.12);
+  border-radius: 8px;
+  background: rgba(15, 20, 25, 0.55);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.15rem 1.4rem 0.15rem 0.45rem;
+  outline: none;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ink-muted) 50%),
+    linear-gradient(135deg, var(--ink-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 12px) calc(50% - 2px),
+    calc(100% - 7px) calc(50% - 2px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.toolbar__setup-select:focus {
+  border-color: rgba(179, 58, 58, 0.45);
 }
