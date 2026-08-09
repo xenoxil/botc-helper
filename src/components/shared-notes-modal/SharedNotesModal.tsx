@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useModalInteractionGate } from '../../hooks/useModalInteractionGate'
 import './SharedNotesModal.css'
 
 interface ISharedNotesModalProps {
@@ -13,6 +14,7 @@ export const SharedNotesModal = ({
   onClose,
 }: ISharedNotesModalProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const isInteractive = useModalInteractionGate()
 
   useEffect(() => {
     textareaRef.current?.focus({ preventScroll: true })
@@ -20,7 +22,12 @@ export const SharedNotesModal = ({
 
   return (
     <div
-      className="shared-notes-modal-backdrop"
+      className={[
+        'shared-notes-modal-backdrop',
+        isInteractive ? '' : 'modal--inert',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       onClick={onClose}
       role="presentation"
     >

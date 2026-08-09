@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useModalInteractionGate } from '../../hooks/useModalInteractionGate'
 import './ClearTableModal.css'
 
 type ClearActionT = 'table' | 'playerData'
@@ -22,6 +23,7 @@ export const ClearTableModal = ({
   onClose,
 }: IClearTableModalProps) => {
   const [pendingAction, setPendingAction] = useState<ClearActionT | null>(null)
+  const isInteractive = useModalInteractionGate(pendingAction)
 
   const handleConfirm = () => {
     if (pendingAction === 'table') {
@@ -34,7 +36,12 @@ export const ClearTableModal = ({
 
   return (
     <div
-      className="clear-table-modal-backdrop"
+      className={[
+        'clear-table-modal-backdrop',
+        isInteractive ? '' : 'modal--inert',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       onClick={onClose}
       role="presentation"
     >

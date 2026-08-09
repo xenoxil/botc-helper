@@ -92,6 +92,10 @@ button:disabled {
   position: relative;
 }
 
+.modal--inert {
+  pointer-events: none;
+}
+
 .btn-primary {
   display: inline-flex;
   align-items: center;

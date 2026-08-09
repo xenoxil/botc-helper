@@ -1,3 +1,4 @@
+import { useModalInteractionGate } from '../../hooks/useModalInteractionGate'
 import type { LayoutModeT } from '../../types/game'
 import './SettingsModal.css'
 
@@ -12,8 +13,17 @@ export const SettingsModal = ({
   onLayoutModeChange,
   onClose,
 }: ISettingsModalProps) => {
+  const isInteractive = useModalInteractionGate()
+
   return (
-    <div className="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div
+      className={['settings-modal', isInteractive ? '' : 'modal--inert']
+        .filter(Boolean)
+        .join(' ')}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settings-title"
+    >
       <header className="settings-modal__header">
         <h2 id="settings-title" className="settings-modal__title">
           Настройки

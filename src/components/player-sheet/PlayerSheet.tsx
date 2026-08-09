@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useModalInteractionGate } from '../../hooks/useModalInteractionGate'
 import type { IPlayer, PlayerMarkColorT } from '../../types/game'
 import './PlayerSheet.css'
 
@@ -24,6 +25,7 @@ export const PlayerSheet = ({
   const nameInputRef = useRef<HTMLInputElement>(null)
   const [isEditingName, setIsEditingName] = useState(Boolean(startInNameEdit))
   const [draftName, setDraftName] = useState(player.name)
+  const isInteractive = useModalInteractionGate(player.id)
 
   useEffect(() => {
     if (!isEditingName) return
@@ -56,7 +58,12 @@ export const PlayerSheet = ({
 
   return (
     <div
-      className="player-sheet-backdrop"
+      className={[
+        'player-sheet-backdrop',
+        isInteractive ? '' : 'modal--inert',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       onClick={onClose}
       role="presentation"
     >
