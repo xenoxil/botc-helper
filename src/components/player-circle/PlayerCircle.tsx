@@ -1,12 +1,13 @@
 import { useCallback } from 'react'
-import type { IPlayer } from '../../types/game'
-import { getCirclePositions } from '../../lib/circleLayout'
+import type { IPlayer, LayoutModeT } from '../../types/game'
+import { getSeatPositions } from '../../lib/squareLayout'
 import { useCircleSeatDrag } from '../../hooks/useCircleSeatDrag'
 import { PlayerSeat } from './PlayerSeat'
 import './PlayerCircle.css'
 
 interface IPlayerCircleProps {
   players: IPlayer[]
+  layoutMode: LayoutModeT
   selectedPlayerId: string | null
   onSelectPlayer: (playerId: string) => void
   onSwapPlayers: (playerIdA: string, playerIdB: string) => void
@@ -14,11 +15,13 @@ interface IPlayerCircleProps {
 
 export const PlayerCircle = ({
   players,
+  layoutMode,
   selectedPlayerId,
   onSelectPlayer,
   onSwapPlayers,
 }: IPlayerCircleProps) => {
-  const positions = getCirclePositions(players.length)
+  const positions = getSeatPositions(layoutMode, players.length)
+  const isSquare = layoutMode === 'square'
 
   const getPlayerIdAtIndex = useCallback(
     (index: number) => players[index]?.id,
@@ -42,11 +45,19 @@ export const PlayerCircle = ({
   })
 
   return (
-    <div className={`player-circle${isDragging ? ' player-circle--dragging' : ''}`}>
+    <div
+      className={[
+        'player-circle',
+        isSquare ? 'player-circle--square' : '',
+        isDragging ? 'player-circle--dragging' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
       <div
         ref={stageRef}
         className="player-circle__stage"
-        aria-label="Круг игроков"
+        aria-label={isSquare ? 'Квадрат игроков' : 'Круг игроков'}
       >
         <div className="player-circle__ring" aria-hidden="true" />
         <div className="player-circle__center" aria-hidden="true">

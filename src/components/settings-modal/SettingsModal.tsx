@@ -66,9 +66,6 @@ export const SettingsModal = ({
             <option value="circle">Круг</option>
             <option value="square">Квадрат</option>
           </select>
-          <p className="settings-modal__hint">
-            Квадрат появится в следующем обновлении.
-          </p>
         </div>
       </div>
     </div>

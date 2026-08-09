@@ -37,9 +37,6 @@ function App() {
   const [isClearOpen, setIsClearOpen] = useState(false)
   const [openWithNameEdit, setOpenWithNameEdit] = useState(false)
   const showTable = players.length >= MIN_CIRCLE_PLAYERS
-  // Square layout is persisted but not rendered yet — always use the circle.
-  const showCircleLayout =
-    showTable && (layoutMode === 'circle' || layoutMode === 'square')
 
   const handleSelectPlayer = (playerId: string | null) => {
     setOpenWithNameEdit(false)
@@ -66,9 +63,10 @@ function App() {
         onSetupPlayerCountChange={setSetupPlayerCount}
       />
       <main className="app-main">
-        {showCircleLayout ? (
+        {showTable ? (
           <PlayerCircle
             players={players}
+            layoutMode={layoutMode}
             selectedPlayerId={selectedPlayerId}
             onSelectPlayer={handleSelectPlayer}
             onSwapPlayers={swapPlayers}
