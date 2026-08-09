@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { extractScriptMeta, fallbackNameFromFile } from '../lib/scriptJson'
 import { loadGameState, saveGameState } from '../lib/storage'
 import { normalizeSetupPlayerCount } from '../lib/setupDistribution'
 import {
@@ -8,10 +9,22 @@ import {
   type LayoutModeT,
   type PlayerMarkColorT,
 } from '../types/game'
+import {
+  BUILTIN_SCRIPTS,
+  DEFAULT_SCRIPT_ID,
+  isBuiltinScriptId,
+  type IScriptMeta,
+  type ScriptIdT,
+} from '../types/script'
 
 type PersistSnapshotT = Pick<
   IGameState,
-  'players' | 'layoutMode' | 'setupPlayerCount' | 'sharedNotes'
+  | 'players'
+  | 'layoutMode'
+  | 'setupPlayerCount'
+  | 'sharedNotes'
+  | 'selectedScriptId'
+  | 'customScripts'
 >
 
 const createPlayer = (index: number): IPlayer => ({
@@ -26,6 +39,8 @@ const toSnapshot = (state: IGameState): PersistSnapshotT => ({
   layoutMode: state.layoutMode,
   setupPlayerCount: state.setupPlayerCount,
   sharedNotes: state.sharedNotes,
+  selectedScriptId: state.selectedScriptId,
+  customScripts: state.customScripts,
 })
 
 export const useGameStore = () => {
@@ -36,6 +51,8 @@ export const useGameStore = () => {
       layoutMode: stored.layoutMode,
       setupPlayerCount: stored.setupPlayerCount,
       sharedNotes: stored.sharedNotes,
+      selectedScriptId: stored.selectedScriptId,
+      customScripts: stored.customScripts,
       selectedPlayerId: null,
     }
   })
@@ -245,6 +262,95 @@ export const useGameStore = () => {
     })
   }, [persistPatch])
 
+  const selectScript = useCallback(
+    (selectedScriptId: ScriptIdT) => {
+      setState((prev) => {
+        const isValid =
+          isBuiltinScriptId(selectedScriptId) ||
+          prev.customScripts.some((script) => script.id === selectedScriptId)
+        if (!isValid || prev.selectedScriptId === selectedScriptId) return prev
+        persistPatch(prev, { selectedScriptId })
+        return { ...prev, selectedScriptId }
+      })
+    },
+    [persistPatch],
+  )
+
+  const addCustomScript = useCallback(
+    (sourceFileName: string, raw: unknown[]) => {
+      const meta = extractScriptMeta(raw, fallbackNameFromFile(sourceFileName))
+      const script = {
+        id: crypto.randomUUID(),
+        name: meta.name,
+        author: meta.author,
+        sourceFileName,
+        raw,
+      }
+
+      setState((prev) => {
+        const customScripts = [...prev.customScripts, script]
+        persistPatch(prev, {
+          customScripts,
+          selectedScriptId: script.id,
+        })
+        return {
+          ...prev,
+          customScripts,
+          selectedScriptId: script.id,
+        }
+      })
+    },
+    [persistPatch],
+  )
+
+  const replaceCustomScript = useCallback(
+    (scriptId: string, sourceFileName: string, raw: unknown[]) => {
+      const meta = extractScriptMeta(raw, fallbackNameFromFile(sourceFileName))
+
+      setState((prev) => {
+        const index = prev.customScripts.findIndex(
+          (script) => script.id === scriptId,
+        )
+        if (index < 0) return prev
+
+        const customScripts = prev.customScripts.map((script, scriptIndex) =>
+          scriptIndex === index
+            ? {
+                ...script,
+                name: meta.name,
+                author: meta.author,
+                sourceFileName,
+                raw,
+              }
+            : script,
+        )
+        persistPatch(prev, { customScripts })
+        return { ...prev, customScripts }
+      })
+    },
+    [persistPatch],
+  )
+
+  const selectedScriptMeta = useMemo((): IScriptMeta => {
+    const builtin = BUILTIN_SCRIPTS.find(
+      (script) => script.id === state.selectedScriptId,
+    )
+    if (builtin) return { name: builtin.name, author: builtin.author }
+
+    const custom = state.customScripts.find(
+      (script) => script.id === state.selectedScriptId,
+    )
+    if (custom) return { name: custom.name, author: custom.author }
+
+    const fallback = BUILTIN_SCRIPTS.find(
+      (script) => script.id === DEFAULT_SCRIPT_ID,
+    )
+    return {
+      name: fallback?.name ?? 'Trouble Brewing',
+      author: fallback?.author ?? '',
+    }
+  }, [state.customScripts, state.selectedScriptId])
+
   return {
     players: state.players,
     selectedPlayerId: state.selectedPlayerId,
@@ -252,6 +358,9 @@ export const useGameStore = () => {
     layoutMode: state.layoutMode,
     setupPlayerCount: state.setupPlayerCount,
     sharedNotes: state.sharedNotes,
+    selectedScriptId: state.selectedScriptId,
+    customScripts: state.customScripts,
+    selectedScriptMeta,
     canAddPlayer: state.players.length < MAX_PLAYERS,
     addPlayer,
     selectPlayer,
@@ -265,5 +374,8 @@ export const useGameStore = () => {
     removePlayer,
     clearTable,
     clearPlayerData,
+    selectScript,
+    addCustomScript,
+    replaceCustomScript,
   }
 }

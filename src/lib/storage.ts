@@ -5,6 +5,12 @@ import type {
   PlayerMarkColorT,
 } from '../types/game'
 import {
+  DEFAULT_SCRIPT_ID,
+  isBuiltinScriptId,
+  type ICustomScript,
+  type ScriptIdT,
+} from '../types/script'
+import {
   DEFAULT_SETUP_PLAYERS,
   normalizeSetupPlayerCount,
 } from './setupDistribution'
@@ -16,11 +22,18 @@ interface IStoredGame {
   layoutMode?: LayoutModeT
   setupPlayerCount?: number
   sharedNotes?: string
+  selectedScriptId?: string | null
+  customScripts?: ICustomScript[]
 }
 
 export type PersistedGameT = Pick<
   IGameState,
-  'players' | 'layoutMode' | 'setupPlayerCount' | 'sharedNotes'
+  | 'players'
+  | 'layoutMode'
+  | 'setupPlayerCount'
+  | 'sharedNotes'
+  | 'selectedScriptId'
+  | 'customScripts'
 >
 
 const isMarkColor = (value: unknown): value is PlayerMarkColorT =>
@@ -48,12 +61,45 @@ const normalizePlayer = (value: unknown): IPlayer | null => {
   }
 }
 
+const normalizeCustomScript = (value: unknown): ICustomScript | null => {
+  if (!value || typeof value !== 'object') return null
+  const script = value as Record<string, unknown>
+  if (
+    typeof script.id !== 'string' ||
+    typeof script.name !== 'string' ||
+    typeof script.sourceFileName !== 'string' ||
+    !Array.isArray(script.raw)
+  ) {
+    return null
+  }
+
+  return {
+    id: script.id,
+    name: script.name,
+    author: typeof script.author === 'string' ? script.author : '',
+    sourceFileName: script.sourceFileName,
+    raw: script.raw,
+  }
+}
+
 const emptyPersisted = (): PersistedGameT => ({
   players: [],
   layoutMode: 'circle',
   setupPlayerCount: DEFAULT_SETUP_PLAYERS,
   sharedNotes: '',
+  selectedScriptId: DEFAULT_SCRIPT_ID,
+  customScripts: [],
 })
+
+const normalizeSelectedScriptId = (
+  value: unknown,
+  customScripts: ICustomScript[],
+): ScriptIdT => {
+  if (typeof value !== 'string' || !value) return DEFAULT_SCRIPT_ID
+  if (isBuiltinScriptId(value)) return value
+  if (customScripts.some((script) => script.id === value)) return value
+  return DEFAULT_SCRIPT_ID
+}
 
 export const loadGameState = (): PersistedGameT => {
   try {
@@ -70,11 +116,22 @@ export const loadGameState = (): PersistedGameT => {
           .filter((player): player is IPlayer => player !== null)
       : []
 
+    const customScripts = Array.isArray(data.customScripts)
+      ? data.customScripts
+          .map(normalizeCustomScript)
+          .filter((script): script is ICustomScript => script !== null)
+      : []
+
     return {
       players,
       layoutMode: isLayoutMode(data.layoutMode) ? data.layoutMode : 'circle',
       setupPlayerCount: normalizeSetupPlayerCount(data.setupPlayerCount),
       sharedNotes: typeof data.sharedNotes === 'string' ? data.sharedNotes : '',
+      customScripts,
+      selectedScriptId: normalizeSelectedScriptId(
+        data.selectedScriptId,
+        customScripts,
+      ),
     }
   } catch {
     return emptyPersisted()
@@ -87,6 +144,8 @@ export const saveGameState = (state: PersistedGameT): void => {
     layoutMode: state.layoutMode,
     setupPlayerCount: state.setupPlayerCount,
     sharedNotes: state.sharedNotes,
+    selectedScriptId: state.selectedScriptId,
+    customScripts: state.customScripts,
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
 }

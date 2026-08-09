@@ -1,3 +1,5 @@
+import type { ICustomScript, ScriptIdT } from './script'
+
 export type PlayerMarkColorT = 'blue' | 'red'
 
 export type LayoutModeT = 'circle' | 'square'
@@ -17,6 +19,8 @@ export interface IGameState {
   /** Script setup size for T/O/M/D (5–15), independent of seat count. */
   setupPlayerCount: number
   sharedNotes: string
+  selectedScriptId: ScriptIdT
+  customScripts: ICustomScript[]
 }
 
 export type GameStateT = IGameState
