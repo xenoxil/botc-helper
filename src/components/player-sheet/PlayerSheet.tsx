@@ -4,6 +4,7 @@ import './PlayerSheet.css'
 
 interface IPlayerSheetProps {
   player: IPlayer
+  startInNameEdit?: boolean
   onClose: () => void
   onNameChange: (playerId: string, name: string) => void
   onNotesChange: (playerId: string, notes: string) => void
@@ -13,6 +14,7 @@ interface IPlayerSheetProps {
 
 export const PlayerSheet = ({
   player,
+  startInNameEdit = false,
   onClose,
   onNameChange,
   onNotesChange,
@@ -20,7 +22,7 @@ export const PlayerSheet = ({
   onRemove,
 }: IPlayerSheetProps) => {
   const nameInputRef = useRef<HTMLInputElement>(null)
-  const [isEditingName, setIsEditingName] = useState(false)
+  const [isEditingName, setIsEditingName] = useState(Boolean(startInNameEdit))
   const [draftName, setDraftName] = useState(player.name)
 
   useEffect(() => {

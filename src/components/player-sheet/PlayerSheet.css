@@ -200,7 +200,12 @@
 }
 
 .player-sheet__icon-btn--cancel {
-  color: var(--ink-muted);
+  color: var(--danger-ink);
+}
+
+.player-sheet__icon-btn--cancel:active {
+  background: color-mix(in srgb, var(--danger) 16%, transparent);
+  color: var(--danger-ink-hover);
 }
 
 @keyframes sheet-fade {

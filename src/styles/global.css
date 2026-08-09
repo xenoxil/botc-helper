@@ -11,6 +11,8 @@
   --sheet: #161c24;
   --sheet-border: rgba(232, 224, 212, 0.08);
   --danger: #b33a3a;
+  --danger-ink: #e07070;
+  --danger-ink-hover: #f08a8a;
   --font-display: 'Fraunces', Georgia, serif;
   --font-ui: 'Outfit', system-ui, sans-serif;
   --safe-top: env(safe-area-inset-top, 0px);

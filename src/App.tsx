@@ -35,10 +35,21 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isSharedNotesOpen, setIsSharedNotesOpen] = useState(false)
   const [isClearOpen, setIsClearOpen] = useState(false)
+  const [openWithNameEdit, setOpenWithNameEdit] = useState(false)
   const showTable = players.length >= MIN_CIRCLE_PLAYERS
   // Square layout is persisted but not rendered yet — always use the circle.
   const showCircleLayout =
     showTable && (layoutMode === 'circle' || layoutMode === 'square')
+
+  const handleSelectPlayer = (playerId: string | null) => {
+    setOpenWithNameEdit(false)
+    selectPlayer(playerId)
+  }
+
+  const handleAddPlayer = () => {
+    setOpenWithNameEdit(true)
+    addPlayer()
+  }
 
   return (
     <div className="app-shell">
@@ -48,7 +59,7 @@ function App() {
         sharedNotes={isSharedNotesOpen ? '' : sharedNotes}
         canAdd={canAddPlayer}
         canClear={players.length > 0 || sharedNotes.trim().length > 0}
-        onAdd={addPlayer}
+        onAdd={handleAddPlayer}
         onOpenClear={() => setIsClearOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenSharedNotes={() => setIsSharedNotesOpen(true)}
@@ -59,20 +70,22 @@ function App() {
           <PlayerCircle
             players={players}
             selectedPlayerId={selectedPlayerId}
-            onSelectPlayer={selectPlayer}
+            onSelectPlayer={handleSelectPlayer}
             onSwapPlayers={swapPlayers}
           />
         ) : (
           <EmptyState
             players={players}
             selectedPlayerId={selectedPlayerId}
-            onSelectPlayer={selectPlayer}
+            onSelectPlayer={handleSelectPlayer}
           />
         )}
         {selectedPlayer ? (
           <PlayerSheet
+            key={selectedPlayer.id}
             player={selectedPlayer}
-            onClose={() => selectPlayer(null)}
+            startInNameEdit={openWithNameEdit}
+            onClose={() => handleSelectPlayer(null)}
             onNameChange={updatePlayerName}
             onNotesChange={updatePlayerNotes}
             onToggleMarkColor={togglePlayerMarkColor}
