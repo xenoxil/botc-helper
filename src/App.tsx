@@ -84,6 +84,9 @@ function App() {
           <PlayerSheet
             key={selectedPlayer.id}
             player={selectedPlayer}
+            seatNumber={
+              players.findIndex((player) => player.id === selectedPlayer.id) + 1
+            }
             startInNameEdit={openWithNameEdit}
             onClose={() => handleSelectPlayer(null)}
             onNameChange={updatePlayerName}

@@ -5,6 +5,7 @@ import './PlayerSheet.css'
 
 interface IPlayerSheetProps {
   player: IPlayer
+  seatNumber: number
   startInNameEdit?: boolean
   onClose: () => void
   onNameChange: (playerId: string, name: string) => void
@@ -15,6 +16,7 @@ interface IPlayerSheetProps {
 
 export const PlayerSheet = ({
   player,
+  seatNumber,
   startInNameEdit = false,
   onClose,
   onNameChange,
@@ -73,45 +75,46 @@ export const PlayerSheet = ({
         onClick={(event) => event.stopPropagation()}
       >
         <div className="player-sheet__header">
-          <div
-            className="player-sheet__marks"
-            role="group"
-            aria-label="Метка игрока"
-          >
-            <button
-              type="button"
-              className={[
-                'player-sheet__mark-btn',
-                'player-sheet__mark-btn--blue',
-                player.markColor === 'blue'
-                  ? 'player-sheet__mark-btn--active'
-                  : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              aria-pressed={player.markColor === 'blue'}
-              onClick={() => onToggleMarkColor(player.id, 'blue')}
-            >
-              Синий
-            </button>
-            <button
-              type="button"
-              className={[
-                'player-sheet__mark-btn',
-                'player-sheet__mark-btn--red',
-                player.markColor === 'red'
-                  ? 'player-sheet__mark-btn--active'
-                  : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              aria-pressed={player.markColor === 'red'}
-              onClick={() => onToggleMarkColor(player.id, 'red')}
-            >
-              Красный
-            </button>
-          </div>
+          <p className="player-sheet__seat">Место {seatNumber}</p>
           <div className="player-sheet__header-actions">
+            <div
+              className="player-sheet__marks"
+              role="group"
+              aria-label="Метка игрока"
+            >
+              <button
+                type="button"
+                className={[
+                  'player-sheet__mark-btn',
+                  'player-sheet__mark-btn--blue',
+                  player.markColor === 'blue'
+                    ? 'player-sheet__mark-btn--active'
+                    : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                aria-pressed={player.markColor === 'blue'}
+                onClick={() => onToggleMarkColor(player.id, 'blue')}
+              >
+                Синий
+              </button>
+              <button
+                type="button"
+                className={[
+                  'player-sheet__mark-btn',
+                  'player-sheet__mark-btn--red',
+                  player.markColor === 'red'
+                    ? 'player-sheet__mark-btn--active'
+                    : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                aria-pressed={player.markColor === 'red'}
+                onClick={() => onToggleMarkColor(player.id, 'red')}
+              >
+                Красный
+              </button>
+            </div>
             <button
               type="button"
               className="player-sheet__trash"

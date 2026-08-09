@@ -27,7 +27,7 @@ export const EmptyState = ({
       </p>
       {isPartial ? (
         <ul className="empty-state__list">
-          {players.map((player) => (
+          {players.map((player, index) => (
             <li key={player.id}>
               <button
                 type="button"
@@ -38,7 +38,7 @@ export const EmptyState = ({
                 }
                 onClick={() => onSelectPlayer(player.id)}
               >
-                {player.name || 'Без имени'}
+                {`${index + 1} · ${player.name || 'Без имени'}`}
               </button>
             </li>
           ))}

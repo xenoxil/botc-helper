@@ -129,6 +129,17 @@
   color: var(--ink);
 }
 
+.player-sheet__seat {
+  margin: 0;
+  flex-shrink: 0;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+
 .field__label {
   font-size: 0.75rem;
   letter-spacing: 0.06em;

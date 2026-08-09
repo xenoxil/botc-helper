@@ -9,6 +9,7 @@ import './PlayerSeat.css'
 
 interface IPlayerSeatProps {
   player: IPlayer
+  seatNumber: number
   x: number
   y: number
   quarter: SeatQuarterT
@@ -24,6 +25,7 @@ interface IPlayerSeatProps {
 
 export const PlayerSeat = ({
   player,
+  seatNumber,
   x,
   y,
   quarter,
@@ -74,12 +76,17 @@ export const PlayerSeat = ({
       aria-pressed={isSelected}
       aria-label={
         hasNotes
-          ? `${player.name || 'Без имени'}: ${notesPreview}`
-          : player.name || 'Без имени'
+          ? `Место ${seatNumber}, ${player.name || 'Без имени'}: ${notesPreview}`
+          : `Место ${seatNumber}, ${player.name || 'Без имени'}`
       }
     >
       <span className="player-seat__name">{player.name || 'Без имени'}</span>
-      <span className="player-seat__avatar">{getPlayerInitials(player.name)}</span>
+      <span className="player-seat__avatar">
+        <span className="player-seat__number" aria-hidden="true">
+          {seatNumber}
+        </span>
+        {getPlayerInitials(player.name)}
+      </span>
       {hasNotes ? (
         <span className="player-seat__notes">{notesPreview}</span>
       ) : null}

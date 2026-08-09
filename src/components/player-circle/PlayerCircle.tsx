@@ -60,6 +60,7 @@ export const PlayerCircle = ({
             <PlayerSeat
               key={player.id}
               player={player}
+              seatNumber={index + 1}
               x={position.x}
               y={position.y}
               quarter={position.quarter}
