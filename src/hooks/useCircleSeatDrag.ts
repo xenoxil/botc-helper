@@ -72,10 +72,15 @@ export const useCircleSeatDrag = ({
       if (!stage || playerCount <= 0) return
 
       const rect = stage.getBoundingClientRect()
-      const size = Math.min(rect.width, rect.height)
       const localX = clientX - rect.left
       const localY = clientY - rect.top
-      const nearest = getNearestSeatIndex(localX, localY, size, playerCount)
+      const nearest = getNearestSeatIndex(
+        localX,
+        localY,
+        rect.width,
+        rect.height,
+        playerCount,
+      )
       dropTargetIndexRef.current = nearest
       setDragState((prev) =>
         prev.dropTargetIndex === nearest

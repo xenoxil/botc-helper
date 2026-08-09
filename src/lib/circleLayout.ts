@@ -66,14 +66,16 @@ const angularDistance = (a: number, b: number): number => {
 export const getNearestSeatIndex = (
   localX: number,
   localY: number,
-  stageSize: number,
+  stageWidth: number,
+  stageHeight: number,
   count: number,
 ): number => {
-  if (count <= 0 || stageSize <= 0) return -1
+  if (count <= 0 || stageWidth <= 0 || stageHeight <= 0) return -1
 
-  const center = stageSize / 2
-  const dx = localX - center
-  const dy = localY - center
+  const centerX = stageWidth / 2
+  const centerY = stageHeight / 2
+  const dx = localX - centerX
+  const dy = localY - centerY
   if (dx === 0 && dy === 0) return 0
 
   const pointerAngle = Math.atan2(dy, dx)
