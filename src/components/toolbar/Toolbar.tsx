@@ -10,7 +10,7 @@ interface IToolbarProps {
   canAdd: boolean
   canClear: boolean
   onAdd: () => void
-  onClear: () => void
+  onOpenClear: () => void
   onOpenSettings: () => void
   onOpenSharedNotes: () => void
   onSetupPlayerCountChange: (count: number) => void
@@ -23,20 +23,12 @@ export const Toolbar = ({
   canAdd,
   canClear,
   onAdd,
-  onClear,
+  onOpenClear,
   onOpenSettings,
   onOpenSharedNotes,
   onSetupPlayerCountChange,
 }: IToolbarProps) => {
   const notesPreview = sharedNotes.trim()
-  const handleClear = () => {
-    if (!canClear) return
-    const confirmed = window.confirm(
-      'Очистить стол? Все игроки и заметки будут удалены.',
-    )
-    if (!confirmed) return
-    onClear()
-  }
 
   return (
     <header className="toolbar">
@@ -67,7 +59,7 @@ export const Toolbar = ({
           <button
             type="button"
             className="toolbar__icon-btn"
-            onClick={handleClear}
+            onClick={onOpenClear}
             disabled={!canClear}
             aria-label="Очистить стол"
             title="Очистить стол"

@@ -3,6 +3,7 @@ import { EmptyState } from './components/empty-state/EmptyState'
 import { PlayerCircle } from './components/player-circle/PlayerCircle'
 import { PlayerSheet } from './components/player-sheet/PlayerSheet'
 import { SettingsModal } from './components/settings-modal/SettingsModal'
+import { ClearTableModal } from './components/clear-table-modal/ClearTableModal'
 import { SharedNotesModal } from './components/shared-notes-modal/SharedNotesModal'
 import { Toolbar } from './components/toolbar/Toolbar'
 import { useGameStore } from './hooks/useGameStore'
@@ -28,10 +29,12 @@ function App() {
     updateSharedNotes,
     removePlayer,
     clearTable,
+    clearPlayerData,
   } = useGameStore()
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isSharedNotesOpen, setIsSharedNotesOpen] = useState(false)
+  const [isClearOpen, setIsClearOpen] = useState(false)
   const showTable = players.length >= MIN_CIRCLE_PLAYERS
   // Square layout is persisted but not rendered yet — always use the circle.
   const showCircleLayout =
@@ -46,7 +49,7 @@ function App() {
         canAdd={canAddPlayer}
         canClear={players.length > 0 || sharedNotes.trim().length > 0}
         onAdd={addPlayer}
-        onClear={clearTable}
+        onOpenClear={() => setIsClearOpen(true)}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenSharedNotes={() => setIsSharedNotesOpen(true)}
         onSetupPlayerCountChange={setSetupPlayerCount}
@@ -88,6 +91,14 @@ function App() {
             notes={sharedNotes}
             onNotesChange={updateSharedNotes}
             onClose={() => setIsSharedNotesOpen(false)}
+          />
+        ) : null}
+        {isClearOpen ? (
+          <ClearTableModal
+            hasPlayers={players.length > 0}
+            onClearTable={clearTable}
+            onClearPlayerData={clearPlayerData}
+            onClose={() => setIsClearOpen(false)}
           />
         ) : null}
       </main>

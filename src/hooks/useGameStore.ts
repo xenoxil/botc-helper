@@ -233,6 +233,18 @@ export const useGameStore = () => {
     })
   }, [persistPatch])
 
+  const clearPlayerData = useCallback(() => {
+    setState((prev) => {
+      const players = prev.players.map((player) => ({
+        ...player,
+        notes: '',
+        markColor: null,
+      }))
+      persistPatch(prev, { players })
+      return { ...prev, players }
+    })
+  }, [persistPatch])
+
   return {
     players: state.players,
     selectedPlayerId: state.selectedPlayerId,
@@ -252,5 +264,6 @@ export const useGameStore = () => {
     updateSharedNotes,
     removePlayer,
     clearTable,
+    clearPlayerData,
   }
 }
