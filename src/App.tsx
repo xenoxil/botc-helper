@@ -41,6 +41,7 @@ function App() {
     selectScript,
     addCustomScript,
     replaceCustomScript,
+    removeCustomScript,
   } = useGameStore()
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
@@ -147,6 +148,7 @@ function App() {
             onSelectScript={selectScript}
             onAddCustomScript={addCustomScript}
             onReplaceCustomScript={replaceCustomScript}
+            onRemoveCustomScript={removeCustomScript}
             onClose={() => setIsScriptsOpen(false)}
           />
         ) : null}

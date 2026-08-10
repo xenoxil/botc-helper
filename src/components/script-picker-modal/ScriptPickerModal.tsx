@@ -19,6 +19,7 @@ interface IScriptPickerModalProps {
     sourceFileName: string,
     raw: unknown[],
   ) => void
+  onRemoveCustomScript: (scriptId: string) => void
   onClose: () => void
 }
 
@@ -34,6 +35,7 @@ export const ScriptPickerModal = ({
   onSelectScript,
   onAddCustomScript,
   onReplaceCustomScript,
+  onRemoveCustomScript,
   onClose,
 }: IScriptPickerModalProps) => {
   const isInteractive = useModalInteractionGate()
@@ -117,6 +119,14 @@ export const ScriptPickerModal = ({
   const openReplacePicker = (scriptId: string) => {
     replaceTargetIdRef.current = scriptId
     replaceInputRef.current?.click()
+  }
+
+  const handleRemoveCustom = (scriptId: string, scriptName: string) => {
+    const confirmed = window.confirm(
+      `Удалить сценарий «${scriptName || 'без имени'}»?`,
+    )
+    if (!confirmed) return
+    onRemoveCustomScript(scriptId)
   }
 
   return (
@@ -208,7 +218,7 @@ export const ScriptPickerModal = ({
             {filteredCustoms.map((script) => {
               const isSelected = selectedScriptId === script.id
               return (
-                <li key={script.id} className="script-picker-modal__custom-row">
+                <li key={script.id}>
                   <button
                     type="button"
                     className={[
@@ -249,6 +259,31 @@ export const ScriptPickerModal = ({
                     >
                       <path d="M12 20h9" />
                       <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="script-picker-modal__delete"
+                    onClick={() => handleRemoveCustom(script.id, script.name)}
+                    aria-label={`Удалить сценарий ${script.name}`}
+                    title="Удалить"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M4 7h16" />
+                      <path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                      <path d="M7 7l1 12a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2l1-12" />
+                      <path d="M10 11v6" />
+                      <path d="M14 11v6" />
                     </svg>
                   </button>
                 </li>

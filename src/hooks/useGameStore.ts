@@ -386,6 +386,31 @@ export const useGameStore = () => {
     [persistPatch],
   )
 
+  const removeCustomScript = useCallback(
+    (scriptId: string) => {
+      setState((prev) => {
+        if (!prev.customScripts.some((script) => script.id === scriptId)) {
+          return prev
+        }
+
+        const customScripts = prev.customScripts.filter(
+          (script) => script.id !== scriptId,
+        )
+        const isSelected = prev.selectedScriptId === scriptId
+        const selectedScriptId = isSelected
+          ? DEFAULT_SCRIPT_ID
+          : prev.selectedScriptId
+        const players = isSelected
+          ? clearPlayersRoles(prev.players)
+          : prev.players
+
+        persistPatch(prev, { customScripts, selectedScriptId, players })
+        return { ...prev, customScripts, selectedScriptId, players }
+      })
+    },
+    [persistPatch],
+  )
+
   const selectedScriptRaw = useMemo(
     (): unknown[] => getScriptRaw(state.selectedScriptId, state.customScripts),
     [state.customScripts, state.selectedScriptId],
@@ -438,5 +463,6 @@ export const useGameStore = () => {
     selectScript,
     addCustomScript,
     replaceCustomScript,
+    removeCustomScript,
   }
 }
