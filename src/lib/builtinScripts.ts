@@ -1,6 +1,7 @@
 import type { BuiltinScriptIdT, IBuiltinScript } from '../types/script'
 import badMoonRising from '../scripts/Bad_Moon_Rising_RU.json'
 import chefsDeluxe from '../scripts/Chef_s_Deluxe_RU.json'
+import rivalCults from '../scripts/Rival_Cults_v1.0.json'
 import sectsViolets from '../scripts/Sects_Violets_RU.json'
 import troubleBrewing from '../scripts/Trouble_Brewing_RU.json'
 
@@ -22,6 +23,12 @@ export const BUILTIN_SCRIPTS: readonly IBuiltinScript[] = [
     name: 'Sects & Violets',
     author: 'The Pandemonium Institute',
     raw: sectsViolets as unknown[],
+  },
+  {
+    id: 'rival-cults',
+    name: 'Rival Cults v1.0',
+    author: 'Seffer',
+    raw: rivalCults as unknown[],
   },
   {
     id: 'chefs-deluxe',

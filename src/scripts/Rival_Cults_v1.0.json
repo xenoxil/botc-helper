@@ -1,0 +1,786 @@
+[
+  {
+    "author": "Seffer",
+    "id": "_meta",
+    "name": "Rival Cults"
+  },
+  {
+    "ability": "Вступление: вы узнаете доброго игрока.",
+    "edition": "carousel",
+    "firstNight": 61,
+    "firstNightReminder": "Укажите на 1 доброго игрока.",
+    "flavor": "\"Как вы СМЕЕТЕ обвинять ее светлость в проступках? Я знаю ее всю свою жизнь! Все девять лет!\"",
+    "id": "translated_steward",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/steward_g.webp",
+      "https://release.botc.app/resources/characters/carousel/steward_e.webp"
+    ],
+    "name": "Управляющий",
+    "otherNight": 0,
+    "otherNightReminder": "",
+    "reminders": [
+      "Знает"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Вступление: вы узнаете двух игроков, не являющихся Демоном.",
+    "edition": "carousel",
+    "firstNight": 62,
+    "firstNightReminder": "Укажите на 2 игроков, которые не являются Демоном.",
+    "flavor": "\"Когда человек лжет, он убивает часть мира.\"",
+    "id": "translated_knight",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/knight_g.webp",
+      "https://release.botc.app/resources/characters/carousel/knight_e.webp"
+    ],
+    "name": "Рыцарь",
+    "otherNight": 0,
+    "otherNightReminder": "",
+    "reminders": [
+      "Видел",
+      "Видел"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Вступление: вы узнаете, что один из двух игроков является определенным Изгоем или что в игре отсутствуют Изгои.",
+    "edition": "tb",
+    "firstNight": 51,
+    "firstNightReminder": "Покажите жетон роли Изгоя, присутствующего в игре. Укажите на двух игроков, один из которых является этой ролью.",
+    "flavor": "\"Конечно, мадам, при обычных обстоятельствах вы можете взять Кодекс Малификариум из хранилища библиотеки. Однако, похоже, вы не являетесь членом библиотеки.\"",
+    "id": "translated_librarian",
+    "image": [
+      "https://release.botc.app/resources/characters/tb/librarian_g.webp",
+      "https://release.botc.app/resources/characters/tb/librarian_e.webp"
+    ],
+    "name": "Библиотекарь",
+    "otherNight": 0,
+    "otherNightReminder": "",
+    "reminders": [
+      "Изгой",
+      "Обманка"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Каждую ночь: выберите двух игроков. Вы узнаете, есть ли среди них Демон. Один из добрых игроков определяется вами как Демон.",
+    "edition": "tb",
+    "firstNight": 55,
+    "firstNightReminder": "Гадалка указывает на двух игроков. Жестом укажите (кивок - да, качание головой - нет), является ли Демоном кто-то из них.",
+    "flavor": "\"Я чувствую великое зло в твоей душе! Но... возможно, это просто твой парфюм. У меня аллергия на бузину.\"",
+    "id": "translated_fortuneteller",
+    "image": [
+      "https://release.botc.app/resources/characters/tb/fortuneteller_g.webp",
+      "https://release.botc.app/resources/characters/tb/fortuneteller_e.webp"
+    ],
+    "name": "Гадалка",
+    "otherNight": 76,
+    "otherNightReminder": "Гадалка указывает на двух игроков. Жестом укажите (кивок - да, качание головой - нет), является ли Демоном кто-то из них.",
+    "reminders": [
+      "Обманка"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Каждую ночь: вы переходите на сторону одного из живых соседей. Если все добрые игроки соглашаются вступить в ваш культ, ваша команда побеждает.",
+    "edition": "carousel",
+    "firstNight": 69,
+    "firstNightReminder": "Если Глава секты сменил сторону, покажите ему палец вверх (добро) или палец вниз (зло) соответственно новой стороне.",
+    "flavor": "\"Думая, что они мудры, сделались глупцами.\"",
+    "id": "translated_cultleader",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/cultleader_g.webp",
+      "https://release.botc.app/resources/characters/carousel/cultleader_e.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_boffin",
+        "reason": "Если у Демона есть способность Лидера культа , он не может стать добрым благодаря этой способности."
+      },
+      {
+        "id": "translated_pithag",
+        "reason": "Если Яга превращает злого игрока в Лидера культа , он не может стать добрым благодаря своей способности."
+      }
+    ],
+    "name": "Лидер культа",
+    "otherNight": 89,
+    "otherNightReminder": "Если Глава секты сменил сторону, покажите ему палец вверх (добро) или палец вниз (зло) соответственно новой стороне.",
+    "reminders": [],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Каждую ночь✳: вы узнаете роль игрока, умершего в результате казни прошедшим днем.",
+    "edition": "tb",
+    "firstNight": 0,
+    "firstNightReminder": "",
+    "flavor": "\"Хммм... что у нас здесь? Левый сапог сношен до пят, за голенищем кремневая стружка. Это одежда военного.\"",
+    "id": "translated_undertaker",
+    "image": [
+      "https://release.botc.app/resources/characters/tb/undertaker_g.webp",
+      "https://release.botc.app/resources/characters/tb/undertaker_e.webp"
+    ],
+    "name": "Гробовщик",
+    "otherNight": 77,
+    "otherNightReminder": "Если сегодня был казнен игрок: покажите жетон роли этого игрока.",
+    "reminders": [
+      "Казнен"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Один раз за игру, ночью: выберите роль. Игрок с этой ролью становится пьяным на 3 ночи и 3 дня.",
+    "edition": "bmr",
+    "firstNight": 33,
+    "firstNightReminder": "Льстец либо качанием головы отказывается действовать, либо указывает на роль в списке. Если Льстец применил способность и выбранная роль находится в игре, ее владелец становится пьян.",
+    "flavor": "\"Я больше боюсь армии из ста овец во главе со львом, чем армии из ста львов во главе с овцой.\"",
+    "id": "translated_courtier",
+    "image": [
+      "https://release.botc.app/resources/characters/bmr/courtier_g.webp",
+      "https://release.botc.app/resources/characters/bmr/courtier_e.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_summoner",
+        "reason": "Если живой Призыватель не имеет способности, то Рассказчик получает способность Призывателя ."
+      },
+      {
+        "id": "translated_vizier",
+        "reason": "Если Визирь теряет свою способность, он узнает об этом и не может умереть в течение дня."
+      }
+    ],
+    "name": "Придворный",
+    "otherNight": 17,
+    "otherNightReminder": "Уменьшите счетчик дней рядом с помеченным пьяным игроком на 1. Если Льстец еще не применял способность: Льстец либо качанием головы отказывается действовать, либо указывает на роль в списке. Если Льстец применил способность и выбранная роль находится в игре, ее владелец становится пьян.",
+    "reminders": [
+      "Истрачено",
+      "Пьян 1",
+      "Пьян 2",
+      "Пьян 3"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Если оба ваших живых соседа являются добрыми, они не могут умереть.",
+    "edition": "bmr",
+    "firstNight": 0,
+    "firstNightReminder": "",
+    "flavor": "\"Если вам холодно, чай согреет вас. Если вам слишком жарко, чай вас охладит. Если вы расстроены, чай вас взбодрит. Если вы взволнованы, чай вас успокоит.\"",
+    "id": "translated_tealady",
+    "image": [
+      "https://release.botc.app/resources/characters/bmr/tealady_g.webp",
+      "https://release.botc.app/resources/characters/bmr/tealady_e.webp"
+    ],
+    "name": "Травница",
+    "otherNight": 0,
+    "otherNightReminder": "",
+    "reminders": [
+      "Не может умереть",
+      "Не может умереть"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Вы не знаете, что у вас за способность. Каждый день: приватно попробуйте ее угадать. Вы узнаете, насколько точной была догадка.",
+    "edition": "carousel",
+    "firstNight": 49,
+    "firstNightReminder": "Решите, как будет работать способность Амнезиака. Если этой ночью Амнезиак должен проснуться, разбудите его и приведите в действие его способность.",
+    "flavor": "\"Подожди. Что. Кто? О, хорошо. Подожди. Что?\"",
+    "id": "translated_amnesiac",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/amnesiac_g.webp",
+      "https://release.botc.app/resources/characters/carousel/amnesiac_e.webp"
+    ],
+    "name": "Амнезиак",
+    "otherNight": 68,
+    "otherNightReminder": "Если этой ночью Амнезиак должен проснуться, разбудите его и приведите в действие его способность.",
+    "reminders": [
+      "?",
+      "?",
+      "?"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Когда вы умираете ночью, один из живых добрых игроков становится Фермером.",
+    "edition": "carousel",
+    "firstNight": 0,
+    "firstNightReminder": "",
+    "flavor": "\"Даже высокопоставленным и могущественным людям нужна еда на столе. Без нас город голодает...\"",
+    "id": "translated_farmer",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/farmer_g.webp",
+      "https://release.botc.app/resources/characters/carousel/farmer_e.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_leviathan",
+        "reason": "Каждую ночь✳: Левиафан выбирает живого доброго игрока (отличного от предыдущих ночей): выбранный Фермер использует свою способность, но не умирает."
+      },
+      {
+        "id": "translated_riot",
+        "reason": "Каждую ночь✳: Мятежник выбирает живого доброго игрока (отличного от предыдущих ночей). Если выбран Фермер , то он использует получает свою способность, но не умирает."
+      }
+    ],
+    "name": "Фермер",
+    "otherNight": 69,
+    "otherNightReminder": "Если этой ночью умер Фермер, выберите доброго живого игрока и сделайте его Фермером. Разбудите этого игрока, покажите ему карточку \"Вы являетесь\" и жетон Фермера.",
+    "reminders": [],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Если Демон убивает вас, все игроки узнают об этом. Впредь вы можете номинировать дважды в день и голосовать дважды за номинацию.",
+    "edition": "carousel",
+    "firstNight": 0,
+    "firstNightReminder": "",
+    "flavor": "Dearg d’fhalt, is gorm do shùil, gheibh thu bàs ro na bha thu an dùil.",
+    "id": "translated_banshee",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/banshee_g.webp",
+      "https://release.botc.app/resources/characters/carousel/banshee_e.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_kittie_leo_huadengchushang",
+        "reason": "Если Цивета меняется ролями с Банши , способность Банши не сработает."
+      },
+      {
+        "id": "translated_leviathan",
+        "reason": "Каждую ночь✳: Левиафан выбирает живого доброго игрока (отличного от предыдущих ночей). Если выбран Банши , то он умирает и получает свою способность."
+      },
+      {
+        "id": "translated_riot",
+        "reason": "Каждую ночь✳: Мятежник выбирает живого доброго игрока (отличного от предыдущих ночей). Если выбран Банши , то он умирает и получает свою способность."
+      },
+      {
+        "id": "translated_vortox",
+        "reason": "Если Вортокс убивает Банши , все игроки все узнают, что Банши умерла."
+      }
+    ],
+    "name": "Банши",
+    "otherNight": 63,
+    "otherNightReminder": "Объявите, что Баньши умерла.",
+    "reminders": [
+      "Имеет способность"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Приспешники и Демон не знакомятся. Если вы умираете, они знакомятся ближайшей ночью.",
+    "edition": "carousel",
+    "firstNight": 15,
+    "firstNightReminder": "Не показывайте Приспешникам и Демону друг друга.",
+    "flavor": "\"В скрытых рощах в глубине леса живет черный мак. Увидеть его цветение - значит быть околдованным. Почувствовать его густой аромат - значит навсегда потеряться, стать рабом Богов света и тьмы.\"",
+    "id": "translated_poppygrower",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/poppygrower_g.webp",
+      "https://release.botc.app/resources/characters/carousel/poppygrower_e.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_lilmonsta",
+        "reason": "Если Монстренок и Дурманщик живы, Приспешники просыпаются один за другим, пока один из них не решит взять жетон Монстренка ."
+      },
+      {
+        "id": "translated_spy",
+        "reason": "Если Дурманщик находится в игре, Шпион не видит Гримуар до тех пор, пока Дурманщик не умрет."
+      },
+      {
+        "id": "translated_summoner",
+        "reason": "Если Дурманщик жив во время действия Призывателя , Призыватель выбирает роль Демона , а Рассказчик – игрока, который им становится."
+      },
+      {
+        "id": "translated_widow",
+        "reason": "Если Дурманщик находится в игре, Вдова не видит Гримуар до тех пор, пока Дурманщик не умрет."
+      },
+      {
+        "id": "translated_zhenniao_huadengchushang",
+        "reason": "Если Чжэнь-няо выбирает Дурманщика , он не будет отравлен способностью Чжэнь-няо ."
+      }
+    ],
+    "name": "Дурманщик",
+    "otherNight": 11,
+    "otherNightReminder": "Если Дурманщик умер, покажите Приспешникам и Демону друг друга.",
+    "reminders": [
+      "Зло знакомится"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Рассказчик волен нарушать игровые правила. Если его казнят, добро побеждает, даже если вы мертвы. [Нет злых ролей]",
+    "edition": "carousel",
+    "firstNight": 0,
+    "firstNightReminder": "",
+    "flavor": "\"Давайте расстанемся с ненужными домыслами и глупой паранойей. Всему есть вполне рациональное объяснение. Да, чайная чашка действительно может вращаться по орбите вокруг планеты, но я буду пить чай из вполне реального фарфора в моих вполне реальных руках.\"",
+    "id": "translated_atheist",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/atheist_g.webp",
+      "https://release.botc.app/resources/characters/carousel/atheist_e.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_operaactor_huadengchushang",
+        "reason": "Если Рассказчика казнят, добро побеждает ."
+      }
+    ],
+    "name": "Атеист",
+    "otherNight": 0,
+    "otherNightReminder": "",
+    "reminders": [],
+    "remindersGlobal": [],
+    "setup": true,
+    "special": [
+      {
+        "name": "good-duplicate",
+        "type": "selection"
+      }
+    ],
+    "team": "townsfolk"
+  },
+  {
+    "ability": "Вступление: выберите игрока (кроме себя). Вы переходите на сторону этого игрока (но не знаете, на какую), даже будучи пьяным или отравленным.",
+    "edition": "carousel",
+    "firstNight": 71,
+    "firstNightReminder": "Огр указывает на игрока (не на себя) и становится его мировоззрением.",
+    "flavor": "\"<grunt><grin></grunt>\"",
+    "id": "translated_ogre",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/ogre_g.webp",
+      "https://release.botc.app/resources/characters/carousel/ogre_e.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_boffin",
+        "reason": "Демон не может обладать способностью Огра ."
+      },
+      {
+        "id": "translated_pithag",
+        "reason": "Если Яга превращает злого игрока в Огра , он не может стать добрым благодаря своей способности."
+      },
+      {
+        "id": "translated_recluse",
+        "reason": "Если Затворник определился злым для Огра , Огр узнает, что он злой."
+      },
+      {
+        "id": "translated_spy",
+        "reason": "Шпион определяется злым для Огра ."
+      }
+    ],
+    "name": "Огр",
+    "otherNight": 0,
+    "otherNightReminder": "",
+    "reminders": [
+      "Друг"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "outsider"
+  },
+  {
+    "ability": "Вы считаете себя Демоном. Демон знает, кто вы и кого вы выбираете ночью.",
+    "edition": "bmr",
+    "firstNight": 20,
+    "firstNightReminder": "Если 7+ игроков: укажите Безумцу число игроков, равное числу Приспешников. Покажите 3 любых жетона добрых ролей. Если Безумцу достался жетон Демона, который просыпается этой ночью: позвольте ему совершить действия Демона. Разместите жетоны “Атака”. Разбудите Демона, покажите его жетон Демона и укажите на Безумца. Если Безумец атаковал игроков: укажите их Демону. Уберите жетоны “Атака”.",
+    "flavor": "\"Я - тьма... Я думаю.\"",
+    "id": "translated_lunatic",
+    "image": [
+      "https://release.botc.app/resources/characters/bmr/lunatic_g.webp",
+      "https://release.botc.app/resources/characters/bmr/lunatic_e.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_mathematician",
+        "reason": "Математик может узнать, атаковал ли Безумец не тех же игроков, что были атакованы настоящим Демоном ."
+      }
+    ],
+    "name": "Безумец",
+    "otherNight": 34,
+    "otherNightReminder": "Позвольте Безумцу совершить действия Демона. Разместите жетоны \"Атака\" соответствующим образом. Если Безумец атаковал игроков: разбудите Демона, покажите ему жетон \"Атака\", затем укажите на атакованных игроков. Уберите жетоны \"Атака\".",
+    "reminders": [
+      "Атака 1",
+      "Атака 2",
+      "Атака 3"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "outsider"
+  },
+  {
+    "ability": "Когда вы умираете, Рассказчик получает способность Приспешника.",
+    "edition": "carousel",
+    "firstNight": 0,
+    "firstNightReminder": "",
+    "flavor": "\"Пжалуста не дфигайтессс. Думую нушно фремя для высторофления. Шммм-шммм.\"",
+    "id": "translated_plaguedoctor",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/plaguedoctor_g.webp",
+      "https://release.botc.app/resources/characters/carousel/plaguedoctor_e.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_baron",
+        "reason": "Если Рассказчик должен получить способность Барона , до двух игроков становятся Изгоями ."
+      },
+      {
+        "id": "translated_boomdandy",
+        "reason": "Если Рассказчик должен получить способность Подрывника , один из игроков становится Подрывником ."
+      },
+      {
+        "id": "translated_charmingfox_huadengchushang",
+        "reason": "Если Чумной Доктор умирает, живой Приспешник получает способность Лисицы в дополнение к своей собственной способности и узнает об этом."
+      },
+      {
+        "id": "translated_corpsemanipulator_huadengchushang",
+        "reason": "Если Чумной Доктор умирает, живой Приспешник получает способность Носильщика трупов в дополнение к своей собственной способности и узнает об этом."
+      },
+      {
+        "id": "translated_eviltwin",
+        "reason": "Если Рассказчик должен получить способность Злого Близница , один из игроков становится Злым Близнецом ."
+      },
+      {
+        "id": "translated_fearmonger",
+        "reason": "Если Рассказчик должен получить способность Страшилы , то Приспешник получает ее и узнает об этом."
+      },
+      {
+        "id": "translated_goblin",
+        "reason": "Если Рассказчик должен получить способность Гоблина , то Приспешник получает ее и узнает об этом."
+      },
+      {
+        "id": "translated_insectkeeper_huadengchushang",
+        "reason": "Если Чумной Доктор умирает, живой Приспешник получает способность Хранителя насекомых в дополнение к своей собственной способности и узнает об этом."
+      },
+      {
+        "id": "translated_marionette",
+        "reason": "Если Рассказчик должен получить способность Марионетки , один из добрых соседей Демона становится Марионеткой ."
+      },
+      {
+        "id": "translated_scarletwoman",
+        "reason": "Если Рассказчик должен получить способность Блудницы , то Приспешник получает ее и узнает об этом."
+      },
+      {
+        "id": "translated_spy",
+        "reason": "Если Рассказчик должен получить способность Шпиона , то Приспешник получает ее и узнает об этом."
+      },
+      {
+        "id": "translated_wraith",
+        "reason": "Если Рассказчик должен получить способность Призрака , то Приспешник получает ее и узнает об этом."
+      }
+    ],
+    "name": "Чумной доктор",
+    "otherNight": 61,
+    "otherNightReminder": "",
+    "reminders": [
+      "Способность Рассказчика"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "outsider"
+  },
+  {
+    "ability": "Один из игроков пьян, даже если вы умираете. Если вы верно угадываете (один раз за игру) этого игрока, вы узнаете, кто является Демоном, иначе вы получаете ложную информацию.",
+    "edition": "carousel",
+    "firstNight": 0,
+    "firstNightReminder": "",
+    "flavor": "\"Когда человек начинает думать, что какая-то вещь - это всего лишь какая-то другая вещь, он, как правило, находится на грани ошибки. Терпение, терпение. Не путайте лишь и должно с есть и нет.\"",
+    "id": "translated_puzzlemaster",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/puzzlemaster_g.webp",
+      "https://release.botc.app/resources/characters/carousel/puzzlemaster_e.webp"
+    ],
+    "name": "Головоломщик",
+    "otherNight": 0,
+    "otherNightReminder": "",
+    "reminders": [
+      "Догадка истрачена",
+      "Пьян"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "outsider"
+  },
+  {
+    "ability": "Каждую ночь: выберите живого игрока (не того же, что в прошлую ночь). Если на следующий день его казнят, он не умирает.",
+    "edition": "bmr",
+    "firstNight": 38,
+    "firstNightReminder": "Адвокат дьявола указывает на живого игрока. Этот игрок назавтра не умирает от казни.",
+    "flavor": "\"Мой клиент, если возражение будет отклонено, признает себя невиновным в силу несоблюдения обвинением статьи 27.B - неправильное или вводящее в заблуждение спряжение глагола. Тот факт, что девять присяжных умерли прошлой ночью, является просто prima facie, что, как показал прецедент \"Уиллс против Туле\", является дополнительным основанием для вынесения оправдательного приговора.\"",
+    "id": "translated_devilsadvocate",
+    "image": [
+      "https://release.botc.app/resources/characters/bmr/devilsadvocate_e.webp",
+      "https://release.botc.app/resources/characters/bmr/devilsadvocate_g.webp"
+    ],
+    "name": "Адвокат дьявола",
+    "otherNight": 25,
+    "otherNightReminder": "Адвокат дьявола указывает на живого игрока (не того же, которого выбирал прошлой ночью). Этот игрок назавтра не умирает от казни.",
+    "reminders": [
+      "Переживает казнь"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "minion"
+  },
+  {
+    "ability": "Один раз за игру: вы можете загадать желание. Если оно исполнено, оно может иметь цену и оставить подсказку о своей природе.",
+    "edition": "carousel",
+    "firstNight": 34,
+    "firstNightReminder": "Запустите способность Волшебника, если применимо.",
+    "flavor": "“Каждый мужчина и каждая женщина – это звезда. Любовь – это закон, любовь по желанию.\"",
+    "id": "translated_wizard",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/wizard_e.webp",
+      "https://release.botc.app/resources/characters/carousel/wizard_g.webp"
+    ],
+    "name": "Волшебник",
+    "otherNight": 19,
+    "otherNightReminder": "Запустите способность Волшебника, если применимо.",
+    "reminders": [
+      "?",
+      "?"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "minion"
+  },
+  {
+    "ability": "Вы можете открывать глаза ночью. Вы просыпаетесь при пробуждении других злых игроков.",
+    "edition": "carousel",
+    "firstNight": 5,
+    "firstNightReminder": "Разбудите Призрака ночью, когда просыпаются другие злые игроки.",
+    "flavor": "\"Ra'āb ina pān ṣilli ša dāri. Rigim qallu ina šūri, šītu ša šunātīka iredde, u napšutka idlul ina pān maṣṣartī dāriti.”\"",
+    "id": "translated_wraith",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/wraith_e.webp",
+      "https://release.botc.app/resources/characters/carousel/wraith_g.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_alchemist",
+        "reason": "Если у Алхимика должна быть способность Призрака , то он ее не получает, и в игре есть Призрак . Каждый день, после фазы казней: живой Алхимик может публично угадать живого игрока в качестве Призрака : если он прав, Демон должен выбрать Призрака этой ночью."
+      },
+      {
+        "id": "translated_magician",
+        "reason": "Каждый день, после фазы казней: живой Фокусник может публично угадать живого игрока в качестве Призрака : если он прав, Демон должен выбрать Призрака этой ночью."
+      }
+    ],
+    "name": "Призрак",
+    "otherNight": 3,
+    "otherNightReminder": "Разбудите Призрака ночью, когда просыпаются другие злые игроки.",
+    "reminders": [],
+    "remindersGlobal": [],
+    "setup": false,
+    "special": [
+      {
+        "name": "open-eyes",
+        "time": "night",
+        "type": "player"
+      }
+    ],
+    "team": "minion"
+  },
+  {
+    "ability": "Все игроки знают, что вы – Визирь. Вы не можете умереть днем. Если добрый игрок проголосовал во время номинации, вы можете немедленно утвердить казнь.",
+    "edition": "carousel",
+    "firstNight": 78,
+    "firstNightReminder": "Объявите \"Визирь находится в игре\" и укажите какой игрок - Визирь.",
+    "flavor": "\"Отличное решение, как всегда, сир. Такое мелкое преступление, как столкновение с Епископом, действительно заслуживает вашего «правосудия» и «милосердия». Прогуляйтесь по садам. Посетите галерею и полюбуйтесь скульптурами фон Штрауфа. Расслабьтесь, сир. Предоставьте все... мне.\"",
+    "id": "translated_vizier",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/vizier_e.webp",
+      "https://release.botc.app/resources/characters/carousel/vizier_g.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_alsaahir",
+        "reason": "Рассказчик не объявляет, что Визирь находится в игре."
+      },
+      {
+        "id": "translated_fearmonger",
+        "reason": "Визирь просыпается вместе со Страшилой , узнает, кого тот выбрал, и не может выбрать казнь этого игрока."
+      },
+      {
+        "id": "translated_investigator",
+        "reason": "Рассказчик не объявляет, что Визирь находится в игре."
+      },
+      {
+        "id": "translated_lilmonsta",
+        "reason": "Визирь умерает от казни, если он сидит с жетоном с Монстренока ."
+      },
+      {
+        "id": "translated_magician",
+        "reason": "Если Визирь находится в игре, Фокусник не имеет способности, но невосприимчив к способности Визиря ."
+      },
+      {
+        "id": "translated_politician",
+        "reason": "Политик может определиться злым для способности Визиря ."
+      },
+      {
+        "id": "translated_preacher",
+        "reason": "Если Визирь теряет свою способность, он узнает об этом и не может умереть в течение дня."
+      },
+      {
+        "id": "translated_zealot",
+        "reason": "Фанатик может определяться злым для способности Визиря ."
+      }
+    ],
+    "name": "Визирь",
+    "otherNight": 0,
+    "otherNightReminder": "",
+    "reminders": [],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "minion"
+  },
+  {
+    "ability": "Каждую ночь✳: выберите игрока. Он умирает. Два ваших соседних Горожанина отравлены.",
+    "edition": "snv",
+    "firstNight": 0,
+    "firstNightReminder": "",
+    "flavor": "\"Грехами Арноха я чувствую твой тяжелый смрад. Проклятым солнцем и его поганым легионом крошечных ухмыляющихся богов я развращаю тебя. Благословенной ночью и скрытыми глубинами ужасного и нечестивого моря я заканчиваю твою убогую жизнь на этом свете.\"",
+    "id": "translated_nodashii",
+    "image": [
+      "https://release.botc.app/resources/characters/snv/nodashii_e.webp",
+      "https://release.botc.app/resources/characters/snv/nodashii_g.webp"
+    ],
+    "name": "Но Даши",
+    "otherNight": 45,
+    "otherNightReminder": "Но Дащи указывает на игрока. Этот игрок умирает.",
+    "reminders": [
+      "Мертв",
+      "Отравлен",
+      "Отравлен"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "demon"
+  },
+  {
+    "ability": "Каждую ночь✳: выберите игрока. Он умирает. [Вы выбираете, какие игроки будут какими Приспешниками. -?/+? Изгоев]",
+    "edition": "carousel",
+    "firstNight": 7,
+    "firstNightReminder": "Казали указывает на игрока и Приспешника в списке ролей. Замените жетон этого игрока на жетон Приспешника, покажите ему карточку \"Вы являетесь\", жетон Приспешника и жест, обозначающий зло (палец вниз). Повторяйте, пока не будет создано обычное количество Приспешников. Казали засыпает.",
+    "flavor": "”Г0нzaле5. Внuма8ие. Меха4низм инверт10ван. О6иbки в cиc7eмe. Перенаcтр0йкa.”",
+    "id": "translated_kazali",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/kazali_e.webp",
+      "https://release.botc.app/resources/characters/carousel/kazali_g.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_bountyhunter",
+        "reason": "Если Казали превращает Охотника за головами в Приспешника , то злого Горожана не создается."
+      },
+      {
+        "id": "translated_buddhistmonk_huadengchushang",
+        "reason": "Казали может превращать игроков, сидящи рядом с Хэшаном , в злых Приспешников ."
+      },
+      {
+        "id": "translated_halfanimmortal_huadengchushang",
+        "reason": "Игрок с ролью Полубессмертного может быть выбран Казали в качестве Приспешника. Если игрок с ролью Казали сделает так, он может выбрать обычное количество Приспешников."
+      },
+      {
+        "id": "translated_marionette",
+        "reason": "Если в игре есть Марионетка , она вступает в игру после Демона и обязана быть его соседом."
+      },
+      {
+        "id": "translated_operaactor_huadengchushang",
+        "reason": "Оперный актер и Казали не могут одновременно находиться в игре на момент старта игры. Если в течение первой ночи добрый игрок собирается стать Оперным актером благодаря способности, до того, как способность сработает, Казали выбирает, кто из игроков станет Приспешниками."
+      },
+      {
+        "id": "translated_summoner",
+        "reason": "Если Призыватель создает второго живого Демона , смерти этой ночью произвольны ."
+      }
+    ],
+    "name": "Казали",
+    "otherNight": 54,
+    "otherNightReminder": "Казали указывает на игрока. Этот игрок умирает.",
+    "reminders": [
+      " "
+    ],
+    "remindersGlobal": [],
+    "setup": true,
+    "team": "demon"
+  },
+  {
+    "ability": "Вступление: выберите игрока. Он отравлен, а вы умираете тогда и только тогда, когда он мертв. Каждую ночь✳: выберите игрока. Он умирает.",
+    "edition": "carousel",
+    "firstNight": 29,
+    "firstNightReminder": "Пиявица указывает на игрока. Разместите рядом с тем игроком жетон \"Отравлен\".",
+    "flavor": "\"Вкусные, вкусные, вкусные, вкусные, вкусные, вкусные, вкусные, вкусные, вкусные моз- то есть пирожки! Да. Вкусные пирожки. Вот что я хотел сказать.\"",
+    "id": "translated_lleech",
+    "image": [
+      "https://release.botc.app/resources/characters/carousel/lleech_e.webp",
+      "https://release.botc.app/resources/characters/carousel/lleech_g.webp"
+    ],
+    "jinxes": [
+      {
+        "id": "translated_heretic",
+        "reason": "В игре может находиться только одна роль со сглазом."
+      },
+      {
+        "id": "translated_mastermind",
+        "reason": "Если Кукловод жив, а хозяин Пиявицы погибает от казни, Пиявица остается в живых, но теряет свою способность."
+      },
+      {
+        "id": "translated_mortician_huadengchushang",
+        "reason": "Если Могильщик номинирует и казнит хозяина Пиявицы , когда живы пять или более игроков, и хозяин умирает в результате казни, то Пиявица умирает в эту ночь, а Могильщик становится злой Пиявицей и не может атаковать в эту ночь."
+      },
+      {
+        "id": "translated_slayer",
+        "reason": "Если Истребитель выбирает своей целью хозяина Пиявицы , хозяин умирает."
+      }
+    ],
+    "name": "Пиявица",
+    "otherNight": 51,
+    "otherNightReminder": "Пиявица указывает на игрока. Этот игрок умирает.",
+    "reminders": [
+      "Мертв",
+      "Отравлен"
+    ],
+    "remindersGlobal": [],
+    "setup": false,
+    "team": "demon"
+  },
+  {
+    "ability": "One or more players each have a goal. When achieved, that player learns a piece of true info.",
+    "edition": "loric",
+    "firstNight": 0,
+    "flavor": "The universe is a verb not a noun, they say, and it is turtles, turtles all the way down. Turtles all the way down, my friend, turtles all the way down.",
+    "id": "translated_zenomancer",
+    "image": [
+      "https://release.botc.app/resources/characters/loric/zenomancer.webp"
+    ],
+    "name": "Zenomancer",
+    "otherNight": 0,
+    "reminders": [
+      "Goal",
+      "Goal",
+      "Goal"
+    ],
+    "setup": false,
+    "team": "loric"
+  }
+]

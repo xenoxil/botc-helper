@@ -2,6 +2,7 @@ export type BuiltinScriptIdT =
   | 'trouble-brewing'
   | 'bad-moon-rising'
   | 'sects-and-violets'
+  | 'rival-cults'
   | 'chefs-deluxe'
 
 export type ScriptIdT = BuiltinScriptIdT | (string & {})
