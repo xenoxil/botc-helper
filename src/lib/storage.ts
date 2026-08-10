@@ -6,10 +6,10 @@ import type {
 } from '../types/game'
 import {
   DEFAULT_SCRIPT_ID,
-  isBuiltinScriptId,
   type ICustomScript,
   type ScriptIdT,
 } from '../types/script'
+import { isBuiltinScriptId } from './builtinScripts'
 import {
   DEFAULT_SETUP_PLAYERS,
   normalizeSetupPlayerCount,

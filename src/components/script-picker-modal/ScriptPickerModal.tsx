@@ -1,14 +1,12 @@
-import { useRef, useState, type ChangeEvent } from 'react'
+import { useMemo, useRef, useState, type ChangeEvent } from 'react'
 import { useModalInteractionGate } from '../../hooks/useModalInteractionGate'
+import { BUILTIN_SCRIPTS } from '../../lib/builtinScripts'
 import {
+  extractScriptMeta,
   fallbackNameFromFile,
   parseScriptJson,
 } from '../../lib/scriptJson'
-import {
-  BUILTIN_SCRIPTS,
-  type ICustomScript,
-  type ScriptIdT,
-} from '../../types/script'
+import type { ICustomScript, ScriptIdT } from '../../types/script'
 import './ScriptPickerModal.css'
 
 interface IScriptPickerModalProps {
@@ -24,6 +22,12 @@ interface IScriptPickerModalProps {
   onClose: () => void
 }
 
+const matchesQuery = (query: string, ...parts: string[]): boolean => {
+  const normalized = query.trim().toLowerCase()
+  if (!normalized) return true
+  return parts.some((part) => part.toLowerCase().includes(normalized))
+}
+
 export const ScriptPickerModal = ({
   selectedScriptId,
   customScripts,
@@ -37,6 +41,32 @@ export const ScriptPickerModal = ({
   const replaceInputRef = useRef<HTMLInputElement>(null)
   const replaceTargetIdRef = useRef<string | null>(null)
   const [error, setError] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filteredBuiltins = useMemo(
+    () =>
+      BUILTIN_SCRIPTS.filter((script) => {
+        const meta = extractScriptMeta(script.raw, script.name)
+        return matchesQuery(
+          searchQuery,
+          script.name,
+          script.author,
+          meta.name,
+          meta.author,
+        )
+      }),
+    [searchQuery],
+  )
+
+  const filteredCustoms = useMemo(
+    () =>
+      customScripts.filter((script) =>
+        matchesQuery(searchQuery, script.name, script.author),
+      ),
+    [customScripts, searchQuery],
+  )
+
+  const hasResults = filteredBuiltins.length > 0 || filteredCustoms.length > 0
 
   const applyParsedFile = (
     file: File,
@@ -133,83 +163,101 @@ export const ScriptPickerModal = ({
           </button>
         </div>
 
-        <ul className="script-picker-modal__list">
-          {BUILTIN_SCRIPTS.map((script) => {
-            const isSelected = selectedScriptId === script.id
-            return (
-              <li key={script.id}>
-                <button
-                  type="button"
-                  className={[
-                    'script-picker-modal__item',
-                    isSelected ? 'script-picker-modal__item--selected' : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  onClick={() => onSelectScript(script.id)}
-                  aria-pressed={isSelected}
-                >
-                  <span className="script-picker-modal__item-name">
-                    {script.name}
-                  </span>
-                  <span className="script-picker-modal__item-author">
-                    {script.author}
-                  </span>
-                </button>
-              </li>
-            )
-          })}
+        <label className="script-picker-modal__search">
+          <span className="script-picker-modal__search-label">Поиск</span>
+          <input
+            type="search"
+            className="script-picker-modal__search-input"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder="Поиск по названию или автору"
+            autoComplete="off"
+          />
+        </label>
 
-          {customScripts.map((script) => {
-            const isSelected = selectedScriptId === script.id
-            return (
-              <li key={script.id} className="script-picker-modal__custom-row">
-                <button
-                  type="button"
-                  className={[
-                    'script-picker-modal__item',
-                    isSelected ? 'script-picker-modal__item--selected' : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  onClick={() => onSelectScript(script.id)}
-                  aria-pressed={isSelected}
-                >
-                  <span className="script-picker-modal__item-name">
-                    {script.name}
-                  </span>
-                  {script.author ? (
-                    <span className="script-picker-modal__item-author">
-                      {script.author}
-                    </span>
-                  ) : null}
-                </button>
-                <button
-                  type="button"
-                  className="script-picker-modal__edit"
-                  onClick={() => openReplacePicker(script.id)}
-                  aria-label={`Изменить сценарий ${script.name}`}
-                  title="Заменить JSON"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    width="18"
-                    height="18"
-                    aria-hidden="true"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+        {hasResults ? (
+          <ul className="script-picker-modal__list">
+            {filteredBuiltins.map((script) => {
+              const isSelected = selectedScriptId === script.id
+              return (
+                <li key={script.id}>
+                  <button
+                    type="button"
+                    className={[
+                      'script-picker-modal__item',
+                      isSelected ? 'script-picker-modal__item--selected' : '',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                    onClick={() => onSelectScript(script.id)}
+                    aria-pressed={isSelected}
                   >
-                    <path d="M12 20h9" />
-                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-                  </svg>
-                </button>
-              </li>
-            )
-          })}
-        </ul>
+                    <span className="script-picker-modal__item-name">
+                      {script.name}
+                    </span>
+                    {script.author ? (
+                      <span className="script-picker-modal__item-author">
+                        {script.author}
+                      </span>
+                    ) : null}
+                  </button>
+                </li>
+              )
+            })}
+
+            {filteredCustoms.map((script) => {
+              const isSelected = selectedScriptId === script.id
+              return (
+                <li key={script.id} className="script-picker-modal__custom-row">
+                  <button
+                    type="button"
+                    className={[
+                      'script-picker-modal__item',
+                      isSelected ? 'script-picker-modal__item--selected' : '',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                    onClick={() => onSelectScript(script.id)}
+                    aria-pressed={isSelected}
+                  >
+                    <span className="script-picker-modal__item-name">
+                      {script.name}
+                    </span>
+                    {script.author ? (
+                      <span className="script-picker-modal__item-author">
+                        {script.author}
+                      </span>
+                    ) : null}
+                  </button>
+                  <button
+                    type="button"
+                    className="script-picker-modal__edit"
+                    onClick={() => openReplacePicker(script.id)}
+                    aria-label={`Изменить сценарий ${script.name}`}
+                    title="Заменить JSON"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M12 20h9" />
+                      <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                    </svg>
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        ) : (
+          <p className="script-picker-modal__empty">Ничего не найдено</p>
+        )}
 
         <div className="script-picker-modal__footer">
           <button

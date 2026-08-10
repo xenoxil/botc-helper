@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { BUILTIN_SCRIPTS, isBuiltinScriptId } from '../lib/builtinScripts'
 import { extractScriptMeta, fallbackNameFromFile } from '../lib/scriptJson'
 import { loadGameState, saveGameState } from '../lib/storage'
 import { normalizeSetupPlayerCount } from '../lib/setupDistribution'
@@ -10,9 +11,7 @@ import {
   type PlayerMarkColorT,
 } from '../types/game'
 import {
-  BUILTIN_SCRIPTS,
   DEFAULT_SCRIPT_ID,
-  isBuiltinScriptId,
   type IScriptMeta,
   type ScriptIdT,
 } from '../types/script'
@@ -335,7 +334,7 @@ export const useGameStore = () => {
     const builtin = BUILTIN_SCRIPTS.find(
       (script) => script.id === state.selectedScriptId,
     )
-    if (builtin) return { name: builtin.name, author: builtin.author }
+    if (builtin) return extractScriptMeta(builtin.raw, builtin.name)
 
     const custom = state.customScripts.find(
       (script) => script.id === state.selectedScriptId,
@@ -345,10 +344,9 @@ export const useGameStore = () => {
     const fallback = BUILTIN_SCRIPTS.find(
       (script) => script.id === DEFAULT_SCRIPT_ID,
     )
-    return {
-      name: fallback?.name ?? 'Trouble Brewing',
-      author: fallback?.author ?? '',
-    }
+    return fallback
+      ? extractScriptMeta(fallback.raw, fallback.name)
+      : { name: 'Trouble Brewing', author: '' }
   }, [state.customScripts, state.selectedScriptId])
 
   return {

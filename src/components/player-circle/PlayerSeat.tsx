@@ -2,7 +2,6 @@ import { useEffect, useState, type PointerEvent as ReactPointerEvent } from 'rea
 import type { IPlayer } from '../../types/game'
 import {
   getNotesPreview,
-  getPlayerInitials,
   type SeatQuarterT,
 } from '../../lib/circleLayout'
 import './PlayerSeat.css'
@@ -85,7 +84,6 @@ export const PlayerSeat = ({
         <span className="player-seat__number" aria-hidden="true">
           {seatNumber}
         </span>
-        {getPlayerInitials(player.name)}
       </span>
       {hasNotes ? (
         <span className="player-seat__notes">{notesPreview}</span>
