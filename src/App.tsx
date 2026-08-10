@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { EmptyState } from './components/empty-state/EmptyState'
 import { PlayerCircle } from './components/player-circle/PlayerCircle'
 import { PlayerSheet } from './components/player-sheet/PlayerSheet'
@@ -8,6 +8,7 @@ import { ScriptPickerModal } from './components/script-picker-modal/ScriptPicker
 import { SharedNotesModal } from './components/shared-notes-modal/SharedNotesModal'
 import { Toolbar } from './components/toolbar/Toolbar'
 import { useGameStore } from './hooks/useGameStore'
+import { prefetchRoleImages } from './lib/roleImageCache'
 import { getScriptRoles } from './lib/scriptRoles'
 import { MIN_CIRCLE_PLAYERS } from './types/game'
 
@@ -52,6 +53,10 @@ function App() {
     () => getScriptRoles(selectedScriptRaw),
     [selectedScriptRaw],
   )
+
+  useEffect(() => {
+    prefetchRoleImages(scriptRoles.map((role) => role.imageUrl))
+  }, [scriptRoles])
 
   const handleSelectPlayer = (playerId: string | null) => {
     setOpenWithNameEdit(false)

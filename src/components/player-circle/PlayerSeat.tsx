@@ -1,4 +1,5 @@
 import { useEffect, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { RoleImage } from '../role-image/RoleImage'
 import type { IPlayer } from '../../types/game'
 import {
   getNotesPreview,
@@ -89,10 +90,9 @@ export const PlayerSeat = ({
       <span className="player-seat__name">{player.name || 'Без имени'}</span>
       <span className="player-seat__avatar">
         {roleImageUrl ? (
-          <img
+          <RoleImage
             className="player-seat__role"
             src={roleImageUrl}
-            alt=""
             draggable={false}
           />
         ) : null}
