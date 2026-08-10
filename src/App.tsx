@@ -74,6 +74,7 @@ function App() {
     <div className="app-shell">
       <Toolbar
         playerCount={players.length}
+        deadCount={players.filter((player) => player.isDead).length}
         setupPlayerCount={setupPlayerCount}
         sharedNotes={isSharedNotesOpen ? '' : sharedNotes}
         selectedScriptMeta={selectedScriptMeta}

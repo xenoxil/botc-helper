@@ -1,4 +1,8 @@
-import { formatPlayerCountLabel } from '../../lib/formatPlayers'
+import {
+  formatAliveCountLabel,
+  formatDeadCountLabel,
+  formatPlayerCountLabel,
+} from '../../lib/formatPlayers'
 import { SETUP_PLAYER_OPTIONS } from '../../lib/setupDistribution'
 import type { IScriptMeta } from '../../types/script'
 import { SetupBreakdown } from './SetupBreakdown'
@@ -6,6 +10,7 @@ import './Toolbar.css'
 
 interface IToolbarProps {
   playerCount: number
+  deadCount: number
   setupPlayerCount: number
   sharedNotes: string
   selectedScriptMeta: IScriptMeta
@@ -21,6 +26,7 @@ interface IToolbarProps {
 
 export const Toolbar = ({
   playerCount,
+  deadCount,
   setupPlayerCount,
   sharedNotes,
   selectedScriptMeta,
@@ -38,11 +44,18 @@ export const Toolbar = ({
   const scriptTitle = scriptAuthor
     ? `${selectedScriptMeta.name} by ${scriptAuthor}`
     : selectedScriptMeta.name
+  const aliveCount = Math.max(0, playerCount - deadCount)
 
   return (
     <header className="toolbar">
       <div className="toolbar__row">
-        <h1 className="toolbar__brand">BOTC HELPER</h1>
+        <div className="toolbar__brand-block">
+          <h1 className="toolbar__brand">BOTC HELPER</h1>
+          <p className="toolbar__total" aria-live="polite">
+            <span className="toolbar__total-num">{playerCount}</span>
+            {` ${formatPlayerCountLabel(playerCount)}`}
+          </p>
+        </div>
         <div className="toolbar__actions">
           <button
             type="button"
@@ -102,8 +115,15 @@ export const Toolbar = ({
       </div>
       <div className="toolbar__meta">
         <p className="toolbar__count" aria-live="polite">
-          <span className="toolbar__count-num">{playerCount}</span>
-          {` ${formatPlayerCountLabel(playerCount)}`}
+          <span className="toolbar__count-num">{aliveCount}</span>
+          {` ${formatAliveCountLabel(aliveCount)}`}
+          <span className="toolbar__count-sep" aria-hidden="true">
+            ·
+          </span>
+          <span className="toolbar__count-num toolbar__count-num--dead">
+            {deadCount}
+          </span>
+          {` ${formatDeadCountLabel(deadCount)}`}
         </p>
         <label className="toolbar__setup">
           <span className="toolbar__setup-label">Раскладка</span>

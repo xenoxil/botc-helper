@@ -14,6 +14,13 @@
   min-height: calc(var(--toolbar-h) - 8px);
 }
 
+.toolbar__brand-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
 .toolbar__brand {
   margin: 0;
   font-family: var(--font-display);
@@ -21,6 +28,21 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1.1;
+}
+
+.toolbar__total {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  line-height: 1.2;
+}
+
+.toolbar__total-num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--ink) 80%, var(--ink-muted));
 }
 
 .toolbar__actions {
@@ -88,6 +110,15 @@
   font-weight: 700;
   font-size: 0.95rem;
   color: var(--ink);
+}
+
+.toolbar__count-num--dead {
+  color: color-mix(in srgb, var(--ink) 75%, var(--ink-muted));
+}
+
+.toolbar__count-sep {
+  margin: 0 0.35rem;
+  color: var(--ink-muted);
 }
 
 .toolbar__setup {
