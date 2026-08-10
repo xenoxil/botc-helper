@@ -39,6 +39,24 @@ const createPlayer = (index: number): IPlayer => ({
   roleId: null,
 })
 
+const ensurePlayersForSetup = (
+  players: IPlayer[],
+  setupPlayerCount: number,
+): IPlayer[] => {
+  const target = Math.min(
+    normalizeSetupPlayerCount(setupPlayerCount),
+    MAX_PLAYERS,
+  )
+  const missing = Math.max(0, target - players.length)
+  if (missing === 0) return players
+  return [
+    ...players,
+    ...Array.from({ length: missing }, (_, index) =>
+      createPlayer(players.length + index + 1),
+    ),
+  ]
+}
+
 const clearPlayersRoles = (players: IPlayer[]): IPlayer[] =>
   players.map((player) =>
     player.roleId == null ? player : { ...player, roleId: null },
@@ -74,8 +92,17 @@ const toSnapshot = (state: IGameState): PersistSnapshotT => ({
 export const useGameStore = () => {
   const [state, setState] = useState<IGameState>(() => {
     const stored = loadGameState()
+    const players =
+      stored.players.length === 0
+        ? ensurePlayersForSetup([], stored.setupPlayerCount)
+        : stored.players
+
+    if (stored.players.length === 0 && players.length > 0) {
+      saveGameState({ ...stored, players })
+    }
+
     return {
-      players: stored.players,
+      players,
       layoutMode: stored.layoutMode,
       setupPlayerCount: stored.setupPlayerCount,
       sharedNotes: stored.sharedNotes,
@@ -268,8 +295,16 @@ export const useGameStore = () => {
       const nextCount = normalizeSetupPlayerCount(setupPlayerCount)
       setState((prev) => {
         if (prev.setupPlayerCount === nextCount) return prev
-        persistPatch(prev, { setupPlayerCount: nextCount })
-        return { ...prev, setupPlayerCount: nextCount }
+
+        const players = ensurePlayersForSetup(prev.players, nextCount)
+        persistPatch(prev, { setupPlayerCount: nextCount, players })
+        return {
+          ...prev,
+          setupPlayerCount: nextCount,
+          players,
+          selectedPlayerId:
+            prev.players.length === 0 ? null : prev.selectedPlayerId,
+        }
       })
     },
     [persistPatch],
@@ -287,10 +322,11 @@ export const useGameStore = () => {
 
   const clearTable = useCallback(() => {
     setState((prev) => {
-      persistPatch(prev, { players: [], sharedNotes: '' })
+      const players = ensurePlayersForSetup([], prev.setupPlayerCount)
+      persistPatch(prev, { players, sharedNotes: '' })
       return {
         ...prev,
-        players: [],
+        players,
         sharedNotes: '',
         selectedPlayerId: null,
       }
