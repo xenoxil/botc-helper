@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useModalInteractionGate } from '../../hooks/useModalInteractionGate'
 import {
   CHARACTER_TEAM_LABELS,
@@ -16,6 +16,8 @@ interface IRolePickerSidebarProps {
   onClose: () => void
 }
 
+const NO_ROLE_LABEL = 'Нет роли'
+
 export const RolePickerSidebar = ({
   playerId,
   roleId,
@@ -24,7 +26,31 @@ export const RolePickerSidebar = ({
   onClose,
 }: IRolePickerSidebarProps) => {
   const isInteractive = useModalInteractionGate(playerId)
-  const roleGroups = useMemo(() => groupRolesByTeam(roles), [roles])
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const normalizedQuery = searchQuery.trim().toLowerCase()
+
+  const filteredRoles = useMemo(() => {
+    if (!normalizedQuery) return roles
+    return roles.filter((role) =>
+      role.name.toLowerCase().includes(normalizedQuery),
+    )
+  }, [normalizedQuery, roles])
+
+  const roleGroups = useMemo(
+    () => groupRolesByTeam(filteredRoles),
+    [filteredRoles],
+  )
+
+  const showNoRole =
+    !normalizedQuery || NO_ROLE_LABEL.toLowerCase().includes(normalizedQuery)
+
+  const hasResults = roleGroups.length > 0 || showNoRole
+
+  const selectRole = (nextRoleId: string | null) => {
+    onRoleChange(playerId, nextRoleId)
+    onClose()
+  }
 
   return (
     <div
@@ -69,63 +95,97 @@ export const RolePickerSidebar = ({
             </svg>
           </button>
         </div>
+
+        <label className="role-picker-sidebar__search">
+          <span className="role-picker-sidebar__search-label">
+            Поиск по роли
+          </span>
+          <input
+            type="search"
+            className="role-picker-sidebar__search-input"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder="Поиск по названию"
+            autoComplete="off"
+          />
+        </label>
+
         <div className="role-picker-sidebar__body">
-          {roleGroups.map((group) => (
-            <div key={group.team} className="role-picker-sidebar__group">
-              <p className="role-picker-sidebar__group-title">
-                {CHARACTER_TEAM_LABELS[group.team]}
-              </p>
-              <div className="role-picker-sidebar__grid">
-                {group.roles.map((role) => {
-                  const isSelected = roleId === role.id
-                  return (
-                    <div key={role.id} className="role-picker-sidebar__cell">
+          {hasResults ? (
+            <>
+              {roleGroups.map((group) => (
+                <div key={group.team} className="role-picker-sidebar__group">
+                  <p className="role-picker-sidebar__group-title">
+                    {CHARACTER_TEAM_LABELS[group.team]}
+                  </p>
+                  <div className="role-picker-sidebar__grid">
+                    {group.roles.map((role) => {
+                      const isSelected = roleId === role.id
+                      return (
+                        <div
+                          key={role.id}
+                          className="role-picker-sidebar__cell"
+                        >
+                          <button
+                            type="button"
+                            className={[
+                              'role-picker-sidebar__btn',
+                              isSelected
+                                ? 'role-picker-sidebar__btn--selected'
+                                : '',
+                            ]
+                              .filter(Boolean)
+                              .join(' ')}
+                            onClick={() => selectRole(role.id)}
+                            aria-pressed={isSelected}
+                            aria-label={role.name}
+                            title={role.name}
+                          >
+                            <RoleImage src={role.imageUrl} />
+                          </button>
+                          <span className="role-picker-sidebar__caption">
+                            {role.name}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              ))}
+              {showNoRole ? (
+                <div className="role-picker-sidebar__group">
+                  <p className="role-picker-sidebar__group-title">
+                    {NO_ROLE_LABEL}
+                  </p>
+                  <div className="role-picker-sidebar__grid">
+                    <div className="role-picker-sidebar__cell">
                       <button
                         type="button"
                         className={[
                           'role-picker-sidebar__btn',
-                          isSelected ? 'role-picker-sidebar__btn--selected' : '',
+                          'role-picker-sidebar__btn--clear',
+                          roleId == null
+                            ? 'role-picker-sidebar__btn--selected'
+                            : '',
                         ]
                           .filter(Boolean)
                           .join(' ')}
-                        onClick={() => onRoleChange(playerId, role.id)}
-                        aria-pressed={isSelected}
-                        aria-label={role.name}
-                        title={role.name}
-                      >
-                        <RoleImage src={role.imageUrl} />
-                      </button>
+                        onClick={() => selectRole(null)}
+                        aria-pressed={roleId == null}
+                        aria-label={NO_ROLE_LABEL}
+                        title={NO_ROLE_LABEL}
+                      />
                       <span className="role-picker-sidebar__caption">
-                        {role.name}
+                        {NO_ROLE_LABEL}
                       </span>
                     </div>
-                  )
-                })}
-              </div>
-            </div>
-          ))}
-          <div className="role-picker-sidebar__group">
-            <p className="role-picker-sidebar__group-title">Нет роли</p>
-            <div className="role-picker-sidebar__grid">
-              <div className="role-picker-sidebar__cell">
-                <button
-                  type="button"
-                  className={[
-                    'role-picker-sidebar__btn',
-                    'role-picker-sidebar__btn--clear',
-                    roleId == null ? 'role-picker-sidebar__btn--selected' : '',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                  onClick={() => onRoleChange(playerId, null)}
-                  aria-pressed={roleId == null}
-                  aria-label="Нет роли"
-                  title="Нет роли"
-                />
-                <span className="role-picker-sidebar__caption">Нет роли</span>
-              </div>
-            </div>
-          </div>
+                  </div>
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <p className="role-picker-sidebar__empty">Ничего не найдено</p>
+          )}
         </div>
       </aside>
     </div>

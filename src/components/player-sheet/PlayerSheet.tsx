@@ -286,6 +286,22 @@ export const PlayerSheet = ({
                 <span className="player-sheet__roles-selected">
                   {hasRoles ? selectedRoleName : 'Нет ролей в сценарии'}
                 </span>
+                {hasRoles ? (
+                  <svg
+                    className="player-sheet__roles-chevron"
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    aria-hidden="true"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M9 6l6 6-6 6" />
+                  </svg>
+                ) : null}
               </button>
             </div>
             <div className="field">
