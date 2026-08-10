@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useModalInteractionGate } from '../../hooks/useModalInteractionGate'
 import { getRoleName, type IScriptRole } from '../../lib/scriptRoles'
 import type { IPlayer, PlayerMarkColorT } from '../../types/game'
+import { JollyRogerIcon } from '../icons/JollyRogerIcon'
 import { RolePickerSidebar } from '../role-picker-sidebar/RolePickerSidebar'
 import './PlayerSheet.css'
 
@@ -15,6 +16,7 @@ interface IPlayerSheetProps {
   onNotesChange: (playerId: string, notes: string) => void
   onRoleChange: (playerId: string, roleId: string | null) => void
   onToggleMarkColor: (playerId: string, color: PlayerMarkColorT) => void
+  onToggleDead: (playerId: string) => void
   onRemove: (playerId: string) => void
 }
 
@@ -28,6 +30,7 @@ export const PlayerSheet = ({
   onNotesChange,
   onRoleChange,
   onToggleMarkColor,
+  onToggleDead,
   onRemove,
 }: IPlayerSheetProps) => {
   const nameInputRef = useRef<HTMLInputElement>(null)
@@ -98,6 +101,33 @@ export const PlayerSheet = ({
                 <button
                   type="button"
                   className={[
+                    'player-sheet__dead-btn',
+                    player.isDead ? 'player-sheet__dead-btn--revive' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                  aria-pressed={player.isDead}
+                  aria-label={player.isDead ? 'Жив' : 'Мёртв'}
+                  title={player.isDead ? 'Жив' : 'Мёртв'}
+                  onClick={() => onToggleDead(player.id)}
+                >
+                  {player.isDead ? (
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      aria-hidden="true"
+                      fill="currentColor"
+                    >
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                  ) : (
+                    <JollyRogerIcon size={18} />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className={[
                     'player-sheet__mark-btn',
                     'player-sheet__mark-btn--blue',
                     player.markColor === 'blue'
@@ -109,7 +139,7 @@ export const PlayerSheet = ({
                   aria-pressed={player.markColor === 'blue'}
                   onClick={() => onToggleMarkColor(player.id, 'blue')}
                 >
-                  Синий
+                  Добро
                 </button>
                 <button
                   type="button"
@@ -125,7 +155,7 @@ export const PlayerSheet = ({
                   aria-pressed={player.markColor === 'red'}
                   onClick={() => onToggleMarkColor(player.id, 'red')}
                 >
-                  Красный
+                  Зло
                 </button>
               </div>
               <button

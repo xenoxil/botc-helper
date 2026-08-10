@@ -37,6 +37,7 @@ const createPlayer = (index: number): IPlayer => ({
   notes: '',
   markColor: null,
   roleId: null,
+  isDead: false,
 })
 
 const ensurePlayersForSetup = (
@@ -256,6 +257,21 @@ export const useGameStore = () => {
     [persistPatch],
   )
 
+  const togglePlayerDead = useCallback(
+    (playerId: string) => {
+      setState((prev) => {
+        const players = prev.players.map((player) =>
+          player.id === playerId
+            ? { ...player, isDead: !player.isDead }
+            : player,
+        )
+        persistPatch(prev, { players })
+        return { ...prev, players }
+      })
+    },
+    [persistPatch],
+  )
+
   const swapPlayers = useCallback(
     (playerIdA: string, playerIdB: string) => {
       if (playerIdA === playerIdB) return
@@ -339,6 +355,7 @@ export const useGameStore = () => {
         ...player,
         notes: '',
         markColor: null,
+        isDead: false,
       }))
       persistPatch(prev, { players })
       return { ...prev, players }
@@ -489,6 +506,7 @@ export const useGameStore = () => {
     updatePlayerNotes,
     updatePlayerRole,
     togglePlayerMarkColor,
+    togglePlayerDead,
     swapPlayers,
     setLayoutMode,
     setSetupPlayerCount,

@@ -12,6 +12,8 @@ export interface IPlayer {
   markColor: PlayerMarkColorT | null
   /** Character id from current script; null = no role. */
   roleId: string | null
+  /** Dead players show a skull badge on the seat. */
+  isDead: boolean
 }
 
 export interface IGameState {

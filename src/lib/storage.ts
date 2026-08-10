@@ -59,6 +59,7 @@ const normalizePlayer = (value: unknown): IPlayer | null => {
     notes: player.notes,
     markColor: isMarkColor(player.markColor) ? player.markColor : null,
     roleId: typeof player.roleId === 'string' ? player.roleId : null,
+    isDead: player.isDead === true,
   }
 }
 

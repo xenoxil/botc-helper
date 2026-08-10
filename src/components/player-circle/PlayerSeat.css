@@ -53,7 +53,6 @@
   top: -0.2rem;
   right: -0.2rem;
   z-index: 2;
-  z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -69,6 +68,23 @@
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0;
+}
+
+.player-seat__dead {
+  position: absolute;
+  bottom: -0.55rem;
+  left: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  border: 1px solid var(--sheet-border);
+  background: var(--sheet);
+  color: var(--ink-muted);
+  transform: translateX(-50%);
 }
 
 .player-seat__name,

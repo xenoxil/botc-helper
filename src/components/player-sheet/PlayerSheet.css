@@ -56,6 +56,34 @@
   display: flex;
   gap: 0.4rem;
   min-width: 0;
+  align-items: center;
+}
+
+.player-sheet__dead-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  border-radius: 999px;
+  border: 2px solid color-mix(in srgb, var(--ink-muted) 40%, transparent);
+  color: var(--ink-muted);
+  background: rgba(8, 11, 14, 0.35);
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.player-sheet__dead-btn:active {
+  transform: scale(0.96);
+}
+
+.player-sheet__dead-btn--revive {
+  color: #e05555;
 }
 
 .player-sheet__mark-btn {

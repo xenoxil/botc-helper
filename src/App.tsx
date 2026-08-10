@@ -31,6 +31,7 @@ function App() {
     updatePlayerNotes,
     updatePlayerRole,
     togglePlayerMarkColor,
+    togglePlayerDead,
     swapPlayers,
     setLayoutMode,
     setSetupPlayerCount,
@@ -116,6 +117,7 @@ function App() {
             onNotesChange={updatePlayerNotes}
             onRoleChange={updatePlayerRole}
             onToggleMarkColor={togglePlayerMarkColor}
+            onToggleDead={togglePlayerDead}
             onRemove={removePlayer}
           />
         ) : null}

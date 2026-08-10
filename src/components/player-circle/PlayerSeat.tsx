@@ -1,5 +1,6 @@
 import { useEffect, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { RoleImage } from '../role-image/RoleImage'
+import { JollyRogerIcon } from '../icons/JollyRogerIcon'
 import type { IPlayer } from '../../types/game'
 import {
   getNotesPreview,
@@ -68,6 +69,7 @@ export const PlayerSeat = ({
     `Место ${seatNumber}`,
     player.name || 'Без имени',
     roleName ? `роль ${roleName}` : null,
+    player.isDead ? 'мёртв' : null,
     hasNotes ? notesPreview : null,
   ].filter(Boolean)
 
@@ -99,6 +101,11 @@ export const PlayerSeat = ({
         <span className="player-seat__number" aria-hidden="true">
           {seatNumber}
         </span>
+        {player.isDead ? (
+          <span className="player-seat__dead" aria-hidden="true">
+            <JollyRogerIcon size={12} />
+          </span>
+        ) : null}
       </span>
       {hasNotes ? (
         <span className="player-seat__notes">{notesPreview}</span>
