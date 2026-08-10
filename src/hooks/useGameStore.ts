@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BUILTIN_SCRIPTS, isBuiltinScriptId } from '../lib/builtinScripts'
 import { extractScriptMeta, fallbackNameFromFile } from '../lib/scriptJson'
+import {
+  getMarkColorForTeam,
+  getRoleById,
+  getScriptRoles,
+} from '../lib/scriptRoles'
 import { loadGameState, saveGameState } from '../lib/storage'
 import { normalizeSetupPlayerCount } from '../lib/setupDistribution'
 import {
@@ -31,7 +36,31 @@ const createPlayer = (index: number): IPlayer => ({
   name: `Игрок ${index}`,
   notes: '',
   markColor: null,
+  roleId: null,
 })
+
+const clearPlayersRoles = (players: IPlayer[]): IPlayer[] =>
+  players.map((player) =>
+    player.roleId == null ? player : { ...player, roleId: null },
+  )
+
+const getScriptRaw = (
+  selectedScriptId: ScriptIdT,
+  customScripts: IGameState['customScripts'],
+): unknown[] => {
+  const builtin = BUILTIN_SCRIPTS.find(
+    (script) => script.id === selectedScriptId,
+  )
+  if (builtin) return builtin.raw
+
+  const custom = customScripts.find((script) => script.id === selectedScriptId)
+  if (custom) return custom.raw
+
+  const fallback = BUILTIN_SCRIPTS.find(
+    (script) => script.id === DEFAULT_SCRIPT_ID,
+  )
+  return fallback?.raw ?? []
+}
 
 const toSnapshot = (state: IGameState): PersistSnapshotT => ({
   players: state.players,
@@ -144,6 +173,25 @@ export const useGameStore = () => {
           player.id === playerId ? { ...player, notes } : player,
         )
         persistPatch(prev, { players }, 200)
+        return { ...prev, players }
+      })
+    },
+    [persistPatch],
+  )
+
+  const updatePlayerRole = useCallback(
+    (playerId: string, roleId: string | null) => {
+      setState((prev) => {
+        const role = getRoleById(
+          getScriptRoles(getScriptRaw(prev.selectedScriptId, prev.customScripts)),
+          roleId,
+        )
+        const markColor =
+          roleId == null || !role ? null : getMarkColorForTeam(role.team)
+        const players = prev.players.map((player) =>
+          player.id === playerId ? { ...player, roleId, markColor } : player,
+        )
+        persistPatch(prev, { players })
         return { ...prev, players }
       })
     },
@@ -268,8 +316,9 @@ export const useGameStore = () => {
           isBuiltinScriptId(selectedScriptId) ||
           prev.customScripts.some((script) => script.id === selectedScriptId)
         if (!isValid || prev.selectedScriptId === selectedScriptId) return prev
-        persistPatch(prev, { selectedScriptId })
-        return { ...prev, selectedScriptId }
+        const players = clearPlayersRoles(prev.players)
+        persistPatch(prev, { selectedScriptId, players })
+        return { ...prev, selectedScriptId, players }
       })
     },
     [persistPatch],
@@ -288,14 +337,17 @@ export const useGameStore = () => {
 
       setState((prev) => {
         const customScripts = [...prev.customScripts, script]
+        const players = clearPlayersRoles(prev.players)
         persistPatch(prev, {
           customScripts,
           selectedScriptId: script.id,
+          players,
         })
         return {
           ...prev,
           customScripts,
           selectedScriptId: script.id,
+          players,
         }
       })
     },
@@ -323,11 +375,20 @@ export const useGameStore = () => {
               }
             : script,
         )
-        persistPatch(prev, { customScripts })
-        return { ...prev, customScripts }
+        const shouldClearRoles = prev.selectedScriptId === scriptId
+        const players = shouldClearRoles
+          ? clearPlayersRoles(prev.players)
+          : prev.players
+        persistPatch(prev, { customScripts, players })
+        return { ...prev, customScripts, players }
       })
     },
     [persistPatch],
+  )
+
+  const selectedScriptRaw = useMemo(
+    (): unknown[] => getScriptRaw(state.selectedScriptId, state.customScripts),
+    [state.customScripts, state.selectedScriptId],
   )
 
   const selectedScriptMeta = useMemo((): IScriptMeta => {
@@ -359,11 +420,13 @@ export const useGameStore = () => {
     selectedScriptId: state.selectedScriptId,
     customScripts: state.customScripts,
     selectedScriptMeta,
+    selectedScriptRaw,
     canAddPlayer: state.players.length < MAX_PLAYERS,
     addPlayer,
     selectPlayer,
     updatePlayerName,
     updatePlayerNotes,
+    updatePlayerRole,
     togglePlayerMarkColor,
     swapPlayers,
     setLayoutMode,

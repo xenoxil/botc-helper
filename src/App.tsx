@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { EmptyState } from './components/empty-state/EmptyState'
 import { PlayerCircle } from './components/player-circle/PlayerCircle'
 import { PlayerSheet } from './components/player-sheet/PlayerSheet'
@@ -8,6 +8,7 @@ import { ScriptPickerModal } from './components/script-picker-modal/ScriptPicker
 import { SharedNotesModal } from './components/shared-notes-modal/SharedNotesModal'
 import { Toolbar } from './components/toolbar/Toolbar'
 import { useGameStore } from './hooks/useGameStore'
+import { getScriptRoles } from './lib/scriptRoles'
 import { MIN_CIRCLE_PLAYERS } from './types/game'
 
 function App() {
@@ -21,11 +22,13 @@ function App() {
     selectedScriptId,
     customScripts,
     selectedScriptMeta,
+    selectedScriptRaw,
     canAddPlayer,
     addPlayer,
     selectPlayer,
     updatePlayerName,
     updatePlayerNotes,
+    updatePlayerRole,
     togglePlayerMarkColor,
     swapPlayers,
     setLayoutMode,
@@ -45,6 +48,10 @@ function App() {
   const [isScriptsOpen, setIsScriptsOpen] = useState(false)
   const [openWithNameEdit, setOpenWithNameEdit] = useState(false)
   const showTable = players.length >= MIN_CIRCLE_PLAYERS
+  const scriptRoles = useMemo(
+    () => getScriptRoles(selectedScriptRaw),
+    [selectedScriptRaw],
+  )
 
   const handleSelectPlayer = (playerId: string | null) => {
     setOpenWithNameEdit(false)
@@ -77,6 +84,7 @@ function App() {
           <PlayerCircle
             players={players}
             layoutMode={layoutMode}
+            roles={scriptRoles}
             selectedPlayerId={selectedPlayerId}
             onSelectPlayer={handleSelectPlayer}
             onSwapPlayers={swapPlayers}
@@ -95,10 +103,12 @@ function App() {
             seatNumber={
               players.findIndex((player) => player.id === selectedPlayer.id) + 1
             }
+            roles={scriptRoles}
             startInNameEdit={openWithNameEdit}
             onClose={() => handleSelectPlayer(null)}
             onNameChange={updatePlayerName}
             onNotesChange={updatePlayerNotes}
+            onRoleChange={updatePlayerRole}
             onToggleMarkColor={togglePlayerMarkColor}
             onRemove={removePlayer}
           />

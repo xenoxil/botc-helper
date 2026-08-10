@@ -219,6 +219,144 @@
   color: var(--danger-ink-hover);
 }
 
+.player-sheet__roles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.player-sheet__roles-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+.player-sheet__roles-summary::-webkit-details-marker {
+  display: none;
+}
+
+.player-sheet__roles-summary::after {
+  content: '';
+  flex-shrink: 0;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 2px solid var(--ink-muted);
+  border-bottom: 2px solid var(--ink-muted);
+  transform: rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.player-sheet__roles[open] > .player-sheet__roles-summary::after {
+  transform: rotate(225deg);
+  translate: 0 0.15rem;
+}
+
+.player-sheet__roles-selected {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.9rem;
+  color: var(--ink);
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-sheet__roles-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.player-sheet__roles-empty {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+}
+
+.player-sheet__role-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.player-sheet__role-group-title {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.player-sheet__role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 0.55rem 0.45rem;
+}
+
+.player-sheet__role-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.player-sheet__role-btn {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--sheet-border);
+  background: rgba(8, 11, 14, 0.35);
+  overflow: hidden;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.player-sheet__role-btn img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-sheet__role-btn--clear {
+  background: transparent;
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--ink-muted) 55%, transparent);
+}
+
+.player-sheet__role-btn--selected {
+  border-color: #3dba6e;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #3dba6e 40%, transparent);
+}
+
+.player-sheet__role-btn:active {
+  transform: scale(0.96);
+}
+
+.player-sheet__role-caption {
+  display: -webkit-box;
+  width: 100%;
+  max-width: 72px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 0.68rem;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ink-muted);
+  word-break: break-word;
+}
+
 @keyframes sheet-fade {
   from {
     opacity: 0;

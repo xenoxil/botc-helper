@@ -9,6 +9,8 @@ import './PlayerSeat.css'
 interface IPlayerSeatProps {
   player: IPlayer
   seatNumber: number
+  roleImageUrl: string | null
+  roleName: string | null
   x: number
   y: number
   quarter: SeatQuarterT
@@ -25,6 +27,8 @@ interface IPlayerSeatProps {
 export const PlayerSeat = ({
   player,
   seatNumber,
+  roleImageUrl,
+  roleName,
   x,
   y,
   quarter,
@@ -59,6 +63,13 @@ export const PlayerSeat = ({
     return () => window.clearTimeout(timer)
   }, [isEntering])
 
+  const labelParts = [
+    `Место ${seatNumber}`,
+    player.name || 'Без имени',
+    roleName ? `роль ${roleName}` : null,
+    hasNotes ? notesPreview : null,
+  ].filter(Boolean)
+
   return (
     <button
       type="button"
@@ -73,14 +84,18 @@ export const PlayerSeat = ({
         event.preventDefault()
       }}
       aria-pressed={isSelected}
-      aria-label={
-        hasNotes
-          ? `Место ${seatNumber}, ${player.name || 'Без имени'}: ${notesPreview}`
-          : `Место ${seatNumber}, ${player.name || 'Без имени'}`
-      }
+      aria-label={labelParts.join(', ')}
     >
       <span className="player-seat__name">{player.name || 'Без имени'}</span>
       <span className="player-seat__avatar">
+        {roleImageUrl ? (
+          <img
+            className="player-seat__role"
+            src={roleImageUrl}
+            alt=""
+            draggable={false}
+          />
+        ) : null}
         <span className="player-seat__number" aria-hidden="true">
           {seatNumber}
         </span>

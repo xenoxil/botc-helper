@@ -10,6 +10,8 @@ export interface IPlayer {
   notes: string
   /** Seat border mark; null = default gray. */
   markColor: PlayerMarkColorT | null
+  /** Character id from current script; null = no role. */
+  roleId: string | null
 }
 
 export interface IGameState {

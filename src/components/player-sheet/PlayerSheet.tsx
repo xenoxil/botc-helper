@@ -1,15 +1,23 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useModalInteractionGate } from '../../hooks/useModalInteractionGate'
+import {
+  CHARACTER_TEAM_LABELS,
+  getRoleName,
+  groupRolesByTeam,
+  type IScriptRole,
+} from '../../lib/scriptRoles'
 import type { IPlayer, PlayerMarkColorT } from '../../types/game'
 import './PlayerSheet.css'
 
 interface IPlayerSheetProps {
   player: IPlayer
   seatNumber: number
+  roles: IScriptRole[]
   startInNameEdit?: boolean
   onClose: () => void
   onNameChange: (playerId: string, name: string) => void
   onNotesChange: (playerId: string, notes: string) => void
+  onRoleChange: (playerId: string, roleId: string | null) => void
   onToggleMarkColor: (playerId: string, color: PlayerMarkColorT) => void
   onRemove: (playerId: string) => void
 }
@@ -17,10 +25,12 @@ interface IPlayerSheetProps {
 export const PlayerSheet = ({
   player,
   seatNumber,
+  roles,
   startInNameEdit = false,
   onClose,
   onNameChange,
   onNotesChange,
+  onRoleChange,
   onToggleMarkColor,
   onRemove,
 }: IPlayerSheetProps) => {
@@ -28,6 +38,11 @@ export const PlayerSheet = ({
   const [isEditingName, setIsEditingName] = useState(Boolean(startInNameEdit))
   const [draftName, setDraftName] = useState(player.name)
   const isInteractive = useModalInteractionGate(player.id)
+  const roleGroups = useMemo(() => groupRolesByTeam(roles), [roles])
+  const selectedRoleName = useMemo(() => {
+    if (player.roleId == null) return 'Нет роли'
+    return getRoleName(roles, player.roleId) ?? 'Нет роли'
+  }, [player.roleId, roles])
 
   useEffect(() => {
     if (!isEditingName) return
@@ -260,6 +275,90 @@ export const PlayerSheet = ({
               </div>
             )}
           </div>
+          <details className="player-sheet__roles">
+            <summary className="player-sheet__roles-summary">
+              <span className="field__label">Роль</span>
+              <span className="player-sheet__roles-selected">
+                {roles.length === 0 ? 'Нет ролей в сценарии' : selectedRoleName}
+              </span>
+            </summary>
+            {roles.length === 0 ? (
+              <p className="player-sheet__roles-empty">Нет ролей в сценарии</p>
+            ) : (
+              <div className="player-sheet__roles-body">
+                {roleGroups.map((group) => (
+                  <div key={group.team} className="player-sheet__role-group">
+                    <p className="player-sheet__role-group-title">
+                      {CHARACTER_TEAM_LABELS[group.team]}
+                    </p>
+                    <div className="player-sheet__role-grid">
+                      {group.roles.map((role) => {
+                        const isSelected = player.roleId === role.id
+                        return (
+                          <div
+                            key={role.id}
+                            className="player-sheet__role-cell"
+                          >
+                            <button
+                              type="button"
+                              className={[
+                                'player-sheet__role-btn',
+                                isSelected
+                                  ? 'player-sheet__role-btn--selected'
+                                  : '',
+                              ]
+                                .filter(Boolean)
+                                .join(' ')}
+                              onClick={() => onRoleChange(player.id, role.id)}
+                              aria-pressed={isSelected}
+                              aria-label={role.name}
+                              title={role.name}
+                            >
+                              <img
+                                src={role.imageUrl}
+                                alt=""
+                                decoding="async"
+                                loading="lazy"
+                              />
+                            </button>
+                            <span className="player-sheet__role-caption">
+                              {role.name}
+                            </span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))}
+                <div className="player-sheet__role-group">
+                  <p className="player-sheet__role-group-title">Нет роли</p>
+                  <div className="player-sheet__role-grid">
+                    <div className="player-sheet__role-cell">
+                      <button
+                        type="button"
+                        className={[
+                          'player-sheet__role-btn',
+                          'player-sheet__role-btn--clear',
+                          player.roleId == null
+                            ? 'player-sheet__role-btn--selected'
+                            : '',
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                        onClick={() => onRoleChange(player.id, null)}
+                        aria-pressed={player.roleId == null}
+                        aria-label="Нет роли"
+                        title="Нет роли"
+                      />
+                      <span className="player-sheet__role-caption">
+                        Нет роли
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </details>
           <div className="field">
             <label htmlFor="player-notes">Заметки</label>
             <textarea
