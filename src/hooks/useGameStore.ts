@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { BUILTIN_SCRIPTS, isBuiltinScriptId } from '../lib/builtinScripts'
+import { extractScriptMeta, fallbackNameFromFile } from '../lib/scriptJson'
+import {
+  getMarkColorForTeam,
+  getRoleById,
+  getScriptRoles,
+} from '../lib/scriptRoles'
 import { loadGameState, saveGameState } from '../lib/storage'
 import { normalizeSetupPlayerCount } from '../lib/setupDistribution'
 import {
@@ -8,10 +15,20 @@ import {
   type LayoutModeT,
   type PlayerMarkColorT,
 } from '../types/game'
+import {
+  DEFAULT_SCRIPT_ID,
+  type IScriptMeta,
+  type ScriptIdT,
+} from '../types/script'
 
 type PersistSnapshotT = Pick<
   IGameState,
-  'players' | 'layoutMode' | 'setupPlayerCount' | 'sharedNotes'
+  | 'players'
+  | 'layoutMode'
+  | 'setupPlayerCount'
+  | 'sharedNotes'
+  | 'selectedScriptId'
+  | 'customScripts'
 >
 
 const createPlayer = (index: number): IPlayer => ({
@@ -19,13 +36,39 @@ const createPlayer = (index: number): IPlayer => ({
   name: `Игрок ${index}`,
   notes: '',
   markColor: null,
+  roleId: null,
 })
+
+const clearPlayersRoles = (players: IPlayer[]): IPlayer[] =>
+  players.map((player) =>
+    player.roleId == null ? player : { ...player, roleId: null },
+  )
+
+const getScriptRaw = (
+  selectedScriptId: ScriptIdT,
+  customScripts: IGameState['customScripts'],
+): unknown[] => {
+  const builtin = BUILTIN_SCRIPTS.find(
+    (script) => script.id === selectedScriptId,
+  )
+  if (builtin) return builtin.raw
+
+  const custom = customScripts.find((script) => script.id === selectedScriptId)
+  if (custom) return custom.raw
+
+  const fallback = BUILTIN_SCRIPTS.find(
+    (script) => script.id === DEFAULT_SCRIPT_ID,
+  )
+  return fallback?.raw ?? []
+}
 
 const toSnapshot = (state: IGameState): PersistSnapshotT => ({
   players: state.players,
   layoutMode: state.layoutMode,
   setupPlayerCount: state.setupPlayerCount,
   sharedNotes: state.sharedNotes,
+  selectedScriptId: state.selectedScriptId,
+  customScripts: state.customScripts,
 })
 
 export const useGameStore = () => {
@@ -36,6 +79,8 @@ export const useGameStore = () => {
       layoutMode: stored.layoutMode,
       setupPlayerCount: stored.setupPlayerCount,
       sharedNotes: stored.sharedNotes,
+      selectedScriptId: stored.selectedScriptId,
+      customScripts: stored.customScripts,
       selectedPlayerId: null,
     }
   })
@@ -128,6 +173,25 @@ export const useGameStore = () => {
           player.id === playerId ? { ...player, notes } : player,
         )
         persistPatch(prev, { players }, 200)
+        return { ...prev, players }
+      })
+    },
+    [persistPatch],
+  )
+
+  const updatePlayerRole = useCallback(
+    (playerId: string, roleId: string | null) => {
+      setState((prev) => {
+        const role = getRoleById(
+          getScriptRoles(getScriptRaw(prev.selectedScriptId, prev.customScripts)),
+          roleId,
+        )
+        const markColor =
+          roleId == null || !role ? null : getMarkColorForTeam(role.team)
+        const players = prev.players.map((player) =>
+          player.id === playerId ? { ...player, roleId, markColor } : player,
+        )
+        persistPatch(prev, { players })
         return { ...prev, players }
       })
     },
@@ -245,6 +309,107 @@ export const useGameStore = () => {
     })
   }, [persistPatch])
 
+  const selectScript = useCallback(
+    (selectedScriptId: ScriptIdT) => {
+      setState((prev) => {
+        const isValid =
+          isBuiltinScriptId(selectedScriptId) ||
+          prev.customScripts.some((script) => script.id === selectedScriptId)
+        if (!isValid || prev.selectedScriptId === selectedScriptId) return prev
+        const players = clearPlayersRoles(prev.players)
+        persistPatch(prev, { selectedScriptId, players })
+        return { ...prev, selectedScriptId, players }
+      })
+    },
+    [persistPatch],
+  )
+
+  const addCustomScript = useCallback(
+    (sourceFileName: string, raw: unknown[]) => {
+      const meta = extractScriptMeta(raw, fallbackNameFromFile(sourceFileName))
+      const script = {
+        id: crypto.randomUUID(),
+        name: meta.name,
+        author: meta.author,
+        sourceFileName,
+        raw,
+      }
+
+      setState((prev) => {
+        const customScripts = [...prev.customScripts, script]
+        const players = clearPlayersRoles(prev.players)
+        persistPatch(prev, {
+          customScripts,
+          selectedScriptId: script.id,
+          players,
+        })
+        return {
+          ...prev,
+          customScripts,
+          selectedScriptId: script.id,
+          players,
+        }
+      })
+    },
+    [persistPatch],
+  )
+
+  const replaceCustomScript = useCallback(
+    (scriptId: string, sourceFileName: string, raw: unknown[]) => {
+      const meta = extractScriptMeta(raw, fallbackNameFromFile(sourceFileName))
+
+      setState((prev) => {
+        const index = prev.customScripts.findIndex(
+          (script) => script.id === scriptId,
+        )
+        if (index < 0) return prev
+
+        const customScripts = prev.customScripts.map((script, scriptIndex) =>
+          scriptIndex === index
+            ? {
+                ...script,
+                name: meta.name,
+                author: meta.author,
+                sourceFileName,
+                raw,
+              }
+            : script,
+        )
+        const shouldClearRoles = prev.selectedScriptId === scriptId
+        const players = shouldClearRoles
+          ? clearPlayersRoles(prev.players)
+          : prev.players
+        persistPatch(prev, { customScripts, players })
+        return { ...prev, customScripts, players }
+      })
+    },
+    [persistPatch],
+  )
+
+  const selectedScriptRaw = useMemo(
+    (): unknown[] => getScriptRaw(state.selectedScriptId, state.customScripts),
+    [state.customScripts, state.selectedScriptId],
+  )
+
+  const selectedScriptMeta = useMemo((): IScriptMeta => {
+    const builtin = BUILTIN_SCRIPTS.find(
+      (script) => script.id === state.selectedScriptId,
+    )
+    if (builtin) return extractScriptMeta(builtin.raw, builtin.name)
+
+    const custom = state.customScripts.find(
+      (script) => script.id === state.selectedScriptId,
+    )
+    if (custom) return { name: custom.name, author: custom.author }
+
+    const fallback = BUILTIN_SCRIPTS.find(
+      (script) => script.id === DEFAULT_SCRIPT_ID,
+    )
+    return fallback
+      ? extractScriptMeta(fallback.raw, fallback.name)
+      : { name: 'Trouble Brewing', author: '' }
+  }, [state.customScripts, state.selectedScriptId])
+
   return {
     players: state.players,
     selectedPlayerId: state.selectedPlayerId,
@@ -252,11 +417,16 @@ export const useGameStore = () => {
     layoutMode: state.layoutMode,
     setupPlayerCount: state.setupPlayerCount,
     sharedNotes: state.sharedNotes,
+    selectedScriptId: state.selectedScriptId,
+    customScripts: state.customScripts,
+    selectedScriptMeta,
+    selectedScriptRaw,
     canAddPlayer: state.players.length < MAX_PLAYERS,
     addPlayer,
     selectPlayer,
     updatePlayerName,
     updatePlayerNotes,
+    updatePlayerRole,
     togglePlayerMarkColor,
     swapPlayers,
     setLayoutMode,
@@ -265,5 +435,8 @@ export const useGameStore = () => {
     removePlayer,
     clearTable,
     clearPlayerData,
+    selectScript,
+    addCustomScript,
+    replaceCustomScript,
   }
 }

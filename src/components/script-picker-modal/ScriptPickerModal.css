@@ -1,0 +1,217 @@
+.script-picker-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(8, 11, 14, 0.55);
+  animation: script-picker-fade 200ms ease both;
+}
+
+.script-picker-modal {
+  position: relative;
+  z-index: 21;
+  width: min(100%, 360px);
+  max-height: min(90svh, 640px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  border: 1px solid var(--sheet-border);
+  background: color-mix(in srgb, var(--sheet) 96%, transparent);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  animation: script-picker-center 220ms ease both;
+  padding: 0.85rem 1rem 1rem;
+}
+
+.script-picker-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+}
+
+.script-picker-modal__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.script-picker-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
+  color: var(--ink-muted);
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.script-picker-modal__close:active {
+  background: rgba(232, 224, 212, 0.06);
+  color: var(--ink);
+}
+
+.script-picker-modal__search {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.65rem;
+}
+
+.script-picker-modal__search-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.script-picker-modal__search-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--sheet-border);
+  background: rgba(8, 11, 14, 0.35);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+}
+
+.script-picker-modal__search-input::placeholder {
+  color: var(--ink-muted);
+}
+
+.script-picker-modal__search-input:focus {
+  outline: none;
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--sheet-border));
+}
+
+.script-picker-modal__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-height: 0;
+  overflow: auto;
+}
+
+.script-picker-modal__empty {
+  margin: 0.35rem 0 0.5rem;
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+}
+
+.script-picker-modal__custom-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.35rem;
+}
+
+.script-picker-modal__item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid var(--sheet-border);
+  background: rgba(232, 224, 212, 0.04);
+  color: var(--ink);
+  text-align: left;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.script-picker-modal__item:active {
+  background: rgba(232, 224, 212, 0.1);
+}
+
+.script-picker-modal__item--selected {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--sheet-border));
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.script-picker-modal__item-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.script-picker-modal__item-author {
+  color: var(--ink-muted);
+  font-size: 0.78rem;
+}
+
+.script-picker-modal__edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  min-width: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--sheet-border);
+  color: var(--ink-muted);
+  background: rgba(232, 224, 212, 0.04);
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.script-picker-modal__edit:active {
+  background: rgba(232, 224, 212, 0.1);
+  color: var(--ink);
+}
+
+.script-picker-modal__footer {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.script-picker-modal__upload {
+  width: 100%;
+}
+
+.script-picker-modal__error {
+  margin: 0;
+  color: var(--danger-ink);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.script-picker-modal__file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes script-picker-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes script-picker-center {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
